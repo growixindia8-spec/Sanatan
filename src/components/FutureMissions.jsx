@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Share2, ArrowLeft, ArrowRight, HelpCircle, Utensils, Home, GraduationCap, Wrench, Shield } from 'lucide-react';
 import DonateButton from './shared/DonateButton';
@@ -48,6 +48,15 @@ const tabsData = [
 
 export default function FutureMissions() {
   const [activeTab, setActiveTab] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setActiveTab((prev) => (prev + 1) % tabsData.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [activeTab, isPaused]);
 
   const handleNext = () => {
     setActiveTab((prev) => (prev + 1) % tabsData.length);
@@ -88,7 +97,13 @@ export default function FutureMissions() {
   };
 
   return (
-    <section className="py-20 bg-white border-b border-gray-50">
+    <section 
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setIsPaused(false)}
+      className="py-20 bg-white border-b border-gray-50"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}

@@ -4,11 +4,58 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import DonateButton from './shared/DonateButton';
 import LanguageSelector from './shared/LanguageSelector';
+import { useTranslation } from '../i18n/LanguageContext';
+import logo from '../assets/logo-sanatan.jpg';
+
+const translationKeys = {
+  'HOME': 'nav.home',
+  'ABOUT': 'nav.about',
+  'ACTIVITIES': 'nav.activities',
+  'DONATE': 'nav.donate',
+  'JOIN US': 'nav.joinUs',
+  'MEDIA': 'nav.media',
+  'PORTAL': 'nav.portal',
+  'PARTNERS': 'nav.partners',
+  'MORE': 'nav.more',
+  'Current Activities': 'nav.currentActivities',
+  'Future Missions': 'nav.futureMissions',
+  'Festivals': 'nav.festivals',
+  'Donation Hub': 'nav.donationHub',
+  'Start Fundraiser': 'nav.startFundraiser',
+  'View Fundraisers': 'nav.viewFundraisers',
+  'Register Now': 'nav.registerNow',
+  'General Member': 'nav.generalMember',
+  'Patron Member': 'nav.patronMember',
+  'Sanatani Sena': 'nav.sanataniSena',
+  'Vigilance Department': 'nav.vigilance',
+  'Sanatan Seva Network': 'nav.sevaNetwork',
+  'News & Events': 'nav.newsEvents',
+  'Photo Gallery': 'nav.photoGallery',
+  'Video Gallery': 'nav.videoGallery',
+  'Login / Register': 'nav.loginRegister',
+  'My Profile': 'nav.myProfile',
+  'Verification Portal': 'nav.verificationPortal',
+  'Announcements': 'nav.announcements',
+  'CSR Partnership': 'nav.csrPartnership',
+  'Sponsorship': 'nav.sponsorship',
+  'Become a Partner': 'nav.becomePartner',
+  'Raise a Complaint': 'nav.raiseComplaint',
+  'FAQ': 'nav.faq',
+  'Community Voices': 'nav.communityVoices',
+  'Legal Documents': 'nav.legalDocuments',
+  'Contact Us': 'nav.contactUs'
+};
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileExpandedMenu, setMobileExpandedMenu] = useState(null);
+  const { t } = useTranslation();
+
+  const getTranslatedName = (name) => {
+    const key = translationKeys[name];
+    return key ? t(key) : name;
+  };
 
   const menuData = [
     { name: 'HOME', path: '/' },
@@ -29,18 +76,7 @@ export default function Header() {
         { name: 'View Fundraisers', path: '/donate/view-fundraisers' }
       ]
     },
-    {
-      name: 'JOIN US',
-      pageTitle: 'MEMBERSHIP & REGISTRATION',
-      items: [
-        { name: 'Register Now', path: '#' },
-        { name: 'General Member', path: '#' },
-        { name: 'Patron Member', path: '#' },
-        { name: 'Sanatani Sena', path: '#' },
-        { name: 'Vigilance Department', path: '#' },
-        { name: 'Sanatan Seva Network', path: '#' }
-      ]
-    },
+    { name: 'JOIN US', path: '/join-the-mission' },
     {
       name: 'MEDIA',
       items: [
@@ -82,64 +118,14 @@ export default function Header() {
     <header className="sticky top-0 bg-white shadow-sm border-b border-gray-100 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          
+
           {/* Logo Section */}
-          <Link to="/" className="flex items-center flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity">
-            {/* Custom Saffron Ribbon / Om Graphic Logo (48px height) */}
-            <svg width="48" height="48" viewBox="0 0 50 50" fill="none" className="mr-3 filter drop-shadow-sm">
-              <circle cx="25" cy="25" r="22" fill="url(#saffronGrad)" />
-              {/* Inner glowing circle */}
-              <circle cx="25" cy="25" r="19" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="1" fill="none" />
-              {/* Devanagari Om path */}
-              <path 
-                d="M 23 15 
-                   C 25 13, 29 13, 29 17 
-                   C 29 20, 26 21, 24.5 21.5 
-                   C 26.5 22, 31 23, 31 27.5 
-                   C 31 32, 25.5 35.5, 20.5 33.5 
-                   L 21.5 31 
-                   C 25 32, 28.5 30, 28.5 27 
-                   C 28.5 24.2, 25 24, 23 24 
-                   L 21 24 
-                   L 21 21.5 
-                   L 23 21.5 
-                   C 25 21.5, 26.5 20.5, 26.5 18 
-                   C 26.5 15.5, 24.5 15.5, 23 16 
-                   Z 
-                   M 26 25 
-                   C 31.5 27.5, 34 31, 35 34.5 
-                   L 32.5 35 
-                   C 31.5 32.5, 29.5 29.5, 25 27 
-                   Z 
-                   M 20.5 11 
-                   C 22.5 10.5, 24.5 11.5, 24.5 13.5 
-                   C 24.5 15.5, 22.5 16.5, 20.5 16 
-                   C 18.5 15.5, 17.5 13.5, 17.5 11.5 
-                   C 17.5 9.5, 18.5 8.5, 20.5 8.5 
-                   L 20.5 11 
-                   M 28.5 14 
-                   C 33.5 15, 36.5 19, 36.5 24.5 
-                   C 36.5 31.5, 29.5 38.5, 20.5 38.5 
-                   C 14.5 38.5, 9.5 33.5, 9.5 27.5 
-                   C 9.5 20.5, 15.5 14.5, 22.5 14.5 
-                   C 24 14.5, 25.5 14.8, 27 15.2" 
-                stroke="white" 
-                strokeWidth="2.5" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-              />
-              <defs>
-                <linearGradient id="saffronGrad" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#FF9933" />
-                  <stop offset="100%" stopColor="#FF6A00" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <span className="font-bold text-base md:text-[17px] text-charcoal leading-tight max-w-[210px] uppercase tracking-wide">
-              Sanatan Dharm
-              <br />
-              <span className="text-gray-500 font-medium text-xs lowercase">Manav Kalyan Foundation</span>
-            </span>
+          <Link to="/" className="flex items-center flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity py-1">
+            <img
+              src={logo}
+              alt="Sanatan Dharm Manav Kalyan Foundation Logo"
+              className="h-10 md:h-12 w-auto max-w-[160px] md:max-w-[200px] object-contain filter drop-shadow-sm"
+            />
           </Link>
 
           {/* Desktop Nav */}
@@ -156,20 +142,18 @@ export default function Header() {
                   {menu.path && menu.path.startsWith('/') ? (
                     <Link
                       to={menu.path}
-                      className={`flex items-center text-charcoal hover:text-saffron transition-colors font-semibold text-[13px] tracking-wider uppercase px-2 xl:px-3 py-2 rounded-md ${
-                        activeDropdown === idx ? 'text-saffron' : ''
-                      }`}
+                      className={`flex items-center text-charcoal hover:text-saffron transition-colors font-semibold text-[13px] tracking-wider uppercase px-2 xl:px-3 py-2 rounded-md ${activeDropdown === idx ? 'text-saffron' : ''
+                        }`}
                     >
-                      <span>{menu.name}</span>
+                      <span>{getTranslatedName(menu.name)}</span>
                     </Link>
                   ) : (
                     <a
                       href={menu.path || '#'}
-                      className={`flex items-center text-charcoal hover:text-saffron transition-colors font-semibold text-[13px] tracking-wider uppercase px-2 xl:px-3 py-2 rounded-md ${
-                        activeDropdown === idx ? 'text-saffron' : ''
-                      }`}
+                      className={`flex items-center text-charcoal hover:text-saffron transition-colors font-semibold text-[13px] tracking-wider uppercase px-2 xl:px-3 py-2 rounded-md ${activeDropdown === idx ? 'text-saffron' : ''
+                        }`}
                     >
-                      <span>{menu.name}</span>
+                      <span>{getTranslatedName(menu.name)}</span>
                       {hasDropdown && <ChevronDown size={14} className="ml-1 opacity-70" />}
                     </a>
                   )}
@@ -189,14 +173,14 @@ export default function Header() {
                             {menu.pageTitle}
                           </div>
                         )}
-                        {menu.items.map((subItem) => 
+                        {menu.items.map((subItem) =>
                           subItem.path && subItem.path.startsWith('/') ? (
                             <Link
                               key={subItem.name}
                               to={subItem.path}
                               className="block px-4 py-2.5 text-sm text-charcoal hover:bg-cream hover:text-saffron transition-colors font-medium"
                             >
-                              {subItem.name}
+                              {getTranslatedName(subItem.name)}
                             </Link>
                           ) : (
                             <a
@@ -204,7 +188,7 @@ export default function Header() {
                               href={subItem.path}
                               className="block px-4 py-2.5 text-sm text-charcoal hover:bg-cream hover:text-saffron transition-colors font-medium"
                             >
-                              {subItem.name}
+                              {getTranslatedName(subItem.name)}
                             </a>
                           )
                         )}
@@ -255,7 +239,7 @@ export default function Header() {
                         onClick={() => setMobileExpandedMenu(isExpanded ? null : idx)}
                         className="flex justify-between items-center w-full py-2 text-charcoal hover:text-saffron transition-colors font-semibold text-sm tracking-wider uppercase text-left"
                       >
-                        <span>{menu.name}</span>
+                        <span>{getTranslatedName(menu.name)}</span>
                         <ChevronDown
                           size={18}
                           className={`transition-transform duration-200 ${isExpanded ? 'rotate-180 text-saffron' : 'opacity-70'}`}
@@ -267,7 +251,7 @@ export default function Header() {
                         onClick={() => setIsOpen(false)}
                         className="block py-2 text-charcoal hover:text-saffron transition-colors font-semibold text-sm tracking-wider uppercase text-left w-full"
                       >
-                        {menu.name}
+                        {getTranslatedName(menu.name)}
                       </Link>
                     ) : (
                       <a
@@ -275,7 +259,7 @@ export default function Header() {
                         onClick={() => setIsOpen(false)}
                         className="block py-2 text-charcoal hover:text-saffron transition-colors font-semibold text-sm tracking-wider uppercase text-left w-full"
                       >
-                        {menu.name}
+                        {getTranslatedName(menu.name)}
                       </a>
                     )}
 
@@ -293,7 +277,7 @@ export default function Header() {
                               {menu.pageTitle}
                             </div>
                           )}
-                          {menu.items.map((subItem) => 
+                          {menu.items.map((subItem) =>
                             subItem.path && subItem.path.startsWith('/') ? (
                               <Link
                                 key={subItem.name}
@@ -301,7 +285,7 @@ export default function Header() {
                                 onClick={() => setIsOpen(false)}
                                 className="block py-2 text-sm text-gray-600 hover:text-saffron font-medium"
                               >
-                                {subItem.name}
+                                {getTranslatedName(subItem.name)}
                               </Link>
                             ) : (
                               <a
@@ -310,7 +294,7 @@ export default function Header() {
                                 onClick={() => setIsOpen(false)}
                                 className="block py-2 text-sm text-gray-600 hover:text-saffron font-medium"
                               >
-                                {subItem.name}
+                                {getTranslatedName(subItem.name)}
                               </a>
                             )
                           )}

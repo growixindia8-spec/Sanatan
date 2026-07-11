@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import LoginGateCard from '../../components/donate/LoginGateCard';
-import OtpVerifyCard from '../../components/donate/OtpVerifyCard';
 import FundraiserRequestForm from '../../components/donate/FundraiserRequestForm';
-import OtpVerification from '../../components/shared/OtpVerification';
+import AuthGate from '../../components/auth/AuthGate';
 
 export default function StartFundraiser() {
-  const [step, setStep] = useState('login'); // 'login', 'otp', 'form'
+  const [step, setStep] = useState('info'); // 'info', 'login', 'form'
 
-  const handleSendOtp = (mobile) => {
-    setStep('otp');
-  };
-
-  const handleVerifyOtp = (otp) => {
+  const handleVerifyOtp = (mobile) => {
     setStep('form');
   };
 
@@ -22,26 +16,7 @@ export default function StartFundraiser() {
       <Header />
       
       <main className="flex-grow">
-        {step !== 'form' && (
-          <div className="relative min-h-[calc(100vh-80px)] flex items-center justify-center p-4">
-            {/* Blurred Glass Background with warm blobs */}
-            <div className="absolute inset-0 bg-white/40 backdrop-blur-2xl overflow-hidden z-0">
-               <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-400/30 rounded-full blur-[100px]"></div>
-               <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-400/30 rounded-full blur-[100px]"></div>
-               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-200/20 rounded-full blur-[120px]"></div>
-            </div>
-            
-            <div className="relative z-10 w-full flex justify-center">
-               <OtpVerification 
-                 title="Start Fundraiser Login" 
-                 subtitle="Verify your mobile to access the secure Fundraising Request workspace." 
-                 onSuccess={handleVerifyOtp} 
-               />
-            </div>
-          </div>
-        )}
-
-        {step === 'form' && (
+        {step === 'info' && (
           <div className="py-12 md:py-16">
             {/* Intro Header */}
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
@@ -143,10 +118,52 @@ export default function StartFundraiser() {
               </div>
             </div>
 
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-               <FundraiserRequestForm />
+            {/* Apply Now CTA Button */}
+            <div className="max-w-md mx-auto px-4 text-center">
+              <button 
+                onClick={() => setStep('login')}
+                className="w-full bg-[#FF6A00] text-white py-4 px-8 rounded-xl font-bold text-lg hover:bg-orange-600 transition-all hover:shadow-lg shadow-orange-500/30 uppercase tracking-wider btn-animated"
+              >
+                मैं आवेदन करना चाहता/चाहती हूँ
+              </button>
             </div>
+          </div>
+        )}
 
+        {step === 'login' && (
+          <div className="relative min-h-[calc(100vh-80px)] flex items-center justify-center p-4">
+            {/* Blurred Glass Background with warm blobs */}
+            <div className="absolute inset-0 bg-white/40 backdrop-blur-2xl overflow-hidden z-0">
+               <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-400/30 rounded-full blur-[100px]"></div>
+               <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-400/30 rounded-full blur-[100px]"></div>
+               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-200/20 rounded-full blur-[120px]"></div>
+            </div>
+            
+            <div className="relative z-10 w-full flex justify-center flex-col items-center">
+               <button 
+                 onClick={() => setStep('info')}
+                 className="mb-4 inline-flex items-center gap-1.5 text-gray-600 hover:text-saffron transition-colors text-sm font-semibold bg-white/80 backdrop-blur px-4 py-2 rounded-full shadow-sm"
+               >
+                 &larr; Back to Information
+               </button>
+               <AuthGate 
+                 title="Start Fundraiser Login" 
+                 subtitle="Verify your account to access the secure Fundraising Request workspace." 
+                 onSuccess={handleVerifyOtp} 
+               />
+            </div>
+          </div>
+        )}
+
+        {step === 'form' && (
+          <div className="py-12 md:py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <button 
+              onClick={() => setStep('info')}
+              className="mb-6 inline-flex items-center gap-1.5 text-gray-500 hover:text-saffron transition-colors text-sm font-semibold"
+            >
+              &larr; Back to Information
+            </button>
+            <FundraiserRequestForm />
           </div>
         )}
       </main>

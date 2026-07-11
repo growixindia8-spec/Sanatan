@@ -19,6 +19,7 @@ import LegalDocuments from './pages/more/LegalDocuments';
 import ContactUs from './pages/more/ContactUs';
 import SplashScreen from './components/shared/SplashScreen';
 import ChatbotWidget from './components/shared/ChatbotWidget';
+import JoinTheMission from './pages/JoinTheMission';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <SplashScreen />
       <Router>
         <Routes>
+          <Route path="/join-the-mission" element={<JoinTheMission />} />
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/activities/current" element={<CurrentActivities />} />

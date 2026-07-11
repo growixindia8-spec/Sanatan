@@ -3,7 +3,7 @@ import { ShieldCheck, Search } from 'lucide-react';
 
 export default function TrustVerificationPortal() {
   return (
-    <section className="py-16 bg-[#FBF1E7]">
+    <section id="verification-portal" className="py-16 bg-[#FBF1E7]">
       <div className="max-w-6xl mx-auto px-4">
         
         {/* Dark navy-to-black gradient background card */}

@@ -1,0 +1,87 @@
+{
+  "nav": {
+    "home": "HOME",
+    "about": "ABOUT",
+    "activities": "ACTIVITIES",
+    "donate": "DONATE",
+    "joinUs": "JOIN US",
+    "media": "MEDIA",
+    "portal": "PORTAL",
+    "partners": "PARTNERS",
+    "more": "MORE",
+    "currentActivities": "Current Activities",
+    "futureMissions": "Future Missions",
+    "festivals": "Festivals",
+    "donationHub": "Donation Hub",
+    "startFundraiser": "Start Fundraiser",
+    "viewFundraisers": "View Fundraisers",
+    "registerNow": "Register Now",
+    "generalMember": "General Member",
+    "patronMember": "Patron Member",
+    "sanataniSena": "Sanatani Sena",
+    "vigilance": "Vigilance Department",
+    "sevaNetwork": "Sanatan Seva Network",
+    "newsEvents": "News & Events",
+    "photoGallery": "Photo Gallery",
+    "videoGallery": "Video Gallery",
+    "loginRegister": "Login / Register",
+    "myProfile": "My Profile",
+    "verificationPortal": "Verification Portal",
+    "announcements": "Announcements",
+    "csrPartnership": "CSR Partnership",
+    "sponsorship": "Sponsorship",
+    "becomePartner": "Become a Partner",
+    "raiseComplaint": "Raise a Complaint",
+    "faq": "FAQ",
+    "communityVoices": "Community Voices",
+    "legalDocuments": "Legal Documents",
+    "contactUs": "Contact Us"
+  },
+  "hero": {
+    "slides": [
+      {
+        "heading": "अगर हम नहीं, आप नहीं, तो कौन?",
+        "subtext": "सनातन, संस्कार और समाज के लिए अभी से ही आगे बढ़िए।",
+        "buttonText": "Join Us"
+      },
+      {
+        "heading": "सनातन बचेगा तो संस्कृति बचेगी।",
+        "subtext": "अपनी विरासत को आने वाली पीढ़ियों तक पहुँचाइए।",
+        "buttonText": "Join The Mission"
+      },
+      {
+        "heading": "अब समय केवल सोचने का नहीं, कुछ करने का है।",
+        "subtext": "आपकी छोटी सी सेवा किसी की सबसे बड़ी उम्मीद बन सकती है।",
+        "buttonText": "Donate Now"
+      },
+      {
+        "heading": "परिवर्तन आपकी प्रतीक्षा में है।",
+        "subtext": "आपका एक कदम अनेक जीवन में सकारात्मक बदलाव ला सकता है।",
+        "buttonText": "Become A Volunteer"
+      },
+      {
+        "heading": "इतिहास दर्शकों को नहीं, योगदान देने वालों को याद रखता है।",
+        "subtext": "सेवा, सुरक्षा और जागरूकता के साथ एक सशक्त समाज का निर्माण करें।",
+        "buttonText": "Join Now"
+      },
+      {
+        "heading": "धर्मो रक्षति रक्षितः",
+        "subtext": "Protect Dharma • Preserve Culture • Serve Humanity",
+        "buttonText": "Join The Movement"
+      }
+    ]
+  },
+  "footer": {
+    "aboutText": "सनातन धर्म मानव कल्याण फाउंडेशन एक पंजीकृत धारा 8 गैर-लाभकारी संगठन है जो मानवीय सेवा, संस्कार संरक्षण, और जनकल्याण अभियानों के लिए समर्पित है।",
+    "getInvolved": "Get Involved",
+    "aboutLegal": "About & Legal",
+    "contactUs": "Contact Us",
+    "donateNow": "Donate Now",
+    "becomeVolunteer": "Become a Volunteer",
+    "verifyVolunteerId": "Verify Volunteer ID",
+    "aboutUs": "About Us",
+    "privacyPolicy": "Privacy & Policy",
+    "termsConditions": "Terms & Conditions",
+    "refundPolicy": "Refund Policy"
+  }
+}

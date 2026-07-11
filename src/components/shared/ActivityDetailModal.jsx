@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, Share2, Heart, HelpCircle } from 'lucide-react';
+import DonateButton from './DonateButton';
 
 export default function ActivityDetailModal({ isOpen, onClose, activity }) {
   if (!isOpen || !activity) return null;
@@ -59,9 +60,12 @@ export default function ActivityDetailModal({ isOpen, onClose, activity }) {
 
           {/* Action Buttons */}
           <div className="mt-8 pt-6 border-t border-gray-100 flex flex-wrap gap-4">
-            <button className="flex-1 flex items-center justify-center gap-2 bg-saffron hover:bg-[#e65c00] text-white py-3 px-4 rounded-xl font-bold transition-colors">
+            <DonateButton 
+              campaign={activity.title}
+              className="flex-1 flex items-center justify-center gap-2 bg-saffron hover:bg-[#e65c00] text-white py-3 px-4 rounded-xl font-bold transition-colors shadow-none rounded-xl"
+            >
               <Heart size={18} /> Donate Now
-            </button>
+            </DonateButton>
             <button className="flex-1 flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 py-3 px-4 rounded-xl font-bold transition-colors">
               <HelpCircle size={18} /> Need Help
             </button>

@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "home": "HOME",
+    "about": "ABOUT",
+    "activities": "ACTIVITIES",
+    "donate": "DONATE",
+    "joinUs": "JOIN US",
+    "media": "MEDIA",
+    "portal": "PORTAL",
+    "partners": "PARTNERS",
+    "more": "MORE",
+    "currentActivities": "Current Activities",
+    "futureMissions": "Future Missions",
+    "festivals": "Festivals",
+    "donationHub": "Donation Hub",
+    "startFundraiser": "Start Fundraiser",
+    "viewFundraisers": "View Fundraisers",
+    "registerNow": "Register Now",
+    "generalMember": "General Member",
+    "patronMember": "Patron Member",
+    "sanataniSena": "Sanatani Sena",
+    "vigilance": "Vigilance Department",
+    "sevaNetwork": "Sanatan Seva Network",
+    "mediaLibrary": "Media Hub",
+    "newsEvents": "News & Events",
+    "photoGallery": "Photo Gallery",
+    "videoGallery": "Video Gallery",
+    "loginRegister": "Login / Register",
+    "myProfile": "My Profile",
+    "verificationPortal": "Verification Portal",
+    "announcements": "Announcements",
+    "csrPartnership": "CSR Partnership",
+    "sponsorship": "Sponsorship",
+    "becomePartner": "Become a Partner",
+    "raiseComplaint": "Raise a Complaint",
+    "faq": "FAQ",
+    "communityVoices": "Community Voices",
+    "legalDocuments": "Legal Documents",
+    "contactUs": "Contact Us"
+  },
+  "hero": {
+    "slides": [
+      {
+        "heading": "If not us, if not you, then who?",
+        "subtext": "Step forward right now for Sanatan, Sanskar and Society.",
+        "buttonText": "Join Us"
+      },
+      {
+        "heading": "If Sanatan survives, culture survives.",
+        "subtext": "Pass on your rich heritage to future generations.",
+        "buttonText": "Join The Mission"
+      },
+      {
+        "heading": "Now is the time for action, not just reflection.",
+        "subtext": "Your small service can become someone's greatest hope.",
+        "buttonText": "Donate Now"
+      },
+      {
+        "heading": "Change is waiting for you.",
+        "subtext": "Your single step can bring positive transformation in many lives.",
+        "buttonText": "Become A Volunteer"
+      },
+      {
+        "heading": "History remembers contributors, not spectators.",
+        "subtext": "Build a strong society with service, security and awareness.",
+        "buttonText": "Join Now"
+      },
+      {
+        "heading": "Dharmo Rakshati Rakshitah",
+        "subtext": "Protect Dharma • Preserve Culture • Serve Humanity",
+        "buttonText": "Join The Movement"
+      }
+    ]
+  },
+  "footer": {
+    "aboutText": "Sanatan Dharm Manav Kalyan Foundation is a registered Section 8 non-profit organization dedicated to humanitarian service, culture preservation, and social welfare campaigns.",
+    "getInvolved": "Get Involved",
+    "aboutLegal": "About & Legal",
+    "contactUs": "Contact Us",
+    "donateNow": "Donate Now",
+    "becomeVolunteer": "Become a Volunteer",
+    "verifyVolunteerId": "Verify Volunteer ID",
+    "aboutUs": "About Us",
+    "privacyPolicy": "Privacy & Policy",
+    "termsConditions": "Terms & Conditions",
+    "refundPolicy": "Refund Policy"
+  }
+}

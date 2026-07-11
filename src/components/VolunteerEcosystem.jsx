@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Eye, Users, UserCheck, Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const cards = [
   {
@@ -131,9 +132,12 @@ export default function VolunteerEcosystem() {
                   </div>
 
                   {/* Button */}
-                  <button className="w-full bg-[#FF6A00] text-white py-3 rounded-full font-bold text-xs uppercase tracking-wider hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/10">
+                  <Link 
+                    to="/join-the-mission"
+                    className="w-full bg-[#FF6A00] text-white py-3 rounded-full font-bold text-xs uppercase tracking-wider hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/10 text-center block"
+                  >
                     {c.buttonText}
-                  </button>
+                  </Link>
                 </div>
               );
             }
@@ -174,9 +178,12 @@ export default function VolunteerEcosystem() {
                 </div>
 
                 {/* Button */}
-                <button className="w-full bg-[#FF6A00] text-white py-3 rounded-full font-bold text-xs uppercase tracking-wider hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/10">
+                <Link 
+                  to="/join-the-mission"
+                  className="w-full bg-[#FF6A00] text-white py-3 rounded-full font-bold text-xs uppercase tracking-wider hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/10 text-center block"
+                >
                   {c.buttonText}
-                </button>
+                </Link>
               </div>
             );
           })}

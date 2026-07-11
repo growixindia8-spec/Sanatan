@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DonateButton from './shared/DonateButton';
+import { useTranslation } from '../i18n/LanguageContext';
+import Typewriter from './shared/Typewriter';
 
 const slides = [
   {
@@ -50,11 +52,18 @@ const announcements = [
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { t } = useTranslation();
+
+  const translatedSlides = slides.map((slide, idx) => ({
+    ...slide,
+    heading: t(`hero.slides.${idx}.heading`),
+    subtext: t(`hero.slides.${idx}.subtext`)
+  }));
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5500); // 5.5 seconds interval
+    }, 6000); // Increased slightly to give time for typing reveal
     return () => clearInterval(timer);
   }, []);
 
@@ -82,28 +91,15 @@ export default function Hero() {
             {/* Slide Content */}
             <div className="absolute bottom-16 left-0 right-0 z-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
               <div className="max-w-2xl text-left">
-                <motion.h1
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                  className="text-white text-3xl sm:text-4xl md:text-5xl font-bold font-devanagari leading-tight mb-4 drop-shadow-md"
-                >
-                  {slides[currentSlide].heading}
-                </motion.h1>
-
-                <motion.p
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
-                  className="text-gray-200 text-base sm:text-lg md:text-xl font-medium mb-8 max-w-xl drop-shadow"
-                >
-                  {slides[currentSlide].subtext}
-                </motion.p>
+                <Typewriter 
+                  headingText={translatedSlides[currentSlide].heading}
+                  subtextText={translatedSlides[currentSlide].subtext}
+                />
 
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.5 }}
+                  transition={{ delay: 0.8, duration: 0.5 }}
                 >
                   {slides[currentSlide].buttonText === 'Donate Now' ? (
                     <DonateButton className="px-8 py-3 text-sm" />

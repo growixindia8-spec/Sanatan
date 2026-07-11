@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Camera, Film, Music, Newspaper } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import PhotosGalleryGrid from './PhotosGalleryGrid';
 import VideosGalleryGrid from './VideosGalleryGrid';
 import BhajanAudioGrid from './BhajanAudioGrid';
@@ -27,7 +28,7 @@ export default function MediaTabs() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold transition-all shadow-sm ${
                 isActive 
-                  ? 'bg-[#1a202c] text-white border border-[#1a202c]' 
+                  ? 'bg-charcoal text-white border border-charcoal shadow-md shadow-slate-400/20' 
                   : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50'
               }`}
             >
@@ -40,10 +41,20 @@ export default function MediaTabs() {
 
       {/* Tabs Content */}
       <div className="min-h-[500px]">
-        {activeTab === 'photos' && <PhotosGalleryGrid />}
-        {activeTab === 'videos' && <VideosGalleryGrid />}
-        {activeTab === 'bhajan' && <BhajanAudioGrid />}
-        {activeTab === 'media' && <MediaCoverageGrid />}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+          >
+            {activeTab === 'photos' && <PhotosGalleryGrid />}
+            {activeTab === 'videos' && <VideosGalleryGrid />}
+            {activeTab === 'bhajan' && <BhajanAudioGrid />}
+            {activeTab === 'media' && <MediaCoverageGrid />}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Newsletter from '../components/Newsletter';
@@ -12,17 +14,27 @@ export default function Media() {
       
       <main className="flex-grow">
         {/* Page Header */}
-        <div className="bg-white py-16 md:py-20 border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span className="inline-block bg-orange-100 text-saffron text-sm font-bold px-4 py-1.5 rounded-full mb-6 uppercase tracking-wider">
-              🚩 MEDIA & MULTIMEDIA LIBRARY
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-charcoal mb-6">
-              The Visual Soul of Sanatan Seva
-            </h1>
-            <p className="max-w-3xl mx-auto text-gray-600 text-lg leading-relaxed">
-              A curated archive of photographs, films, sacred audio and press coverage — chronicling the Foundation's journey across temples, communities and causes.
-            </p>
+        <div className="bg-white py-12 md:py-16 border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Back to Home Link */}
+            <div className="mb-6">
+              <Link to="/" className="inline-flex items-center gap-1.5 text-gray-500 hover:text-saffron transition-colors text-sm font-semibold">
+                <ArrowLeft size={16} />
+                <span>Back to Home</span>
+              </Link>
+            </div>
+            
+            <div className="text-center">
+              <span className="inline-block bg-orange-100 text-saffron text-sm font-bold px-4 py-1.5 rounded-full mb-6 uppercase tracking-wider">
+                🚩 MEDIA & MULTIMEDIA LIBRARY
+              </span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-serif text-charcoal mb-6">
+                The Visual Soul of Sanatan Seva
+              </h1>
+              <p className="max-w-3xl mx-auto text-gray-600 text-lg leading-relaxed">
+                A curated archive of photographs, films, sacred audio and press coverage — chronicling the Foundation's journey across temples, communities and causes.
+              </p>
+            </div>
           </div>
         </div>
 
