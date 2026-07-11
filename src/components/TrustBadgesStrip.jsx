@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ShieldCheck, Award, FileText, Landmark, FileCheck, CheckCircle } from 'lucide-react';
+import CertificateModal from './shared/CertificateModal';
 
 const badges = [
   {
@@ -41,6 +42,8 @@ const badges = [
 ];
 
 export default function TrustBadgesStrip() {
+  const [selectedBadge, setSelectedBadge] = useState(null);
+
   return (
     <section className="py-16 bg-white border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,9 +63,10 @@ export default function TrustBadgesStrip() {
           {badges.map((badge, idx) => {
             const Icon = badge.icon;
             return (
-              <div 
+              <button 
                 key={idx} 
-                className="flex flex-col items-center justify-center bg-white shadow-sm border border-gray-100 hover:border-saffron/20 hover:shadow-md transition-all duration-300 rounded-[12px] p-6 text-center group"
+                onClick={() => setSelectedBadge(badge)}
+                className="flex flex-col items-center justify-center bg-white shadow-sm border border-gray-100 hover:border-saffron/20 hover:shadow-md transition-all duration-300 rounded-[12px] p-6 text-center group focus:outline-none focus:ring-2 focus:ring-saffron focus:ring-offset-2"
               >
                 {/* Circular Badge Icon (~56px = w-14 h-14) */}
                 <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 ${badge.color}`}>
@@ -76,12 +80,18 @@ export default function TrustBadgesStrip() {
                 <span className="text-[11px] text-gray-500 font-medium tracking-wide uppercase">
                   {badge.label}
                 </span>
-              </div>
+              </button>
             );
           })}
         </div>
 
       </div>
+
+      <CertificateModal 
+        isOpen={!!selectedBadge} 
+        onClose={() => setSelectedBadge(null)} 
+        certificate={selectedBadge} 
+      />
     </section>
   );
 }

@@ -4,6 +4,7 @@ import Footer from '../../components/Footer';
 import LoginGateCard from '../../components/donate/LoginGateCard';
 import OtpVerifyCard from '../../components/donate/OtpVerifyCard';
 import FundraiserRequestForm from '../../components/donate/FundraiserRequestForm';
+import OtpVerification from '../../components/shared/OtpVerification';
 
 export default function StartFundraiser() {
   const [step, setStep] = useState('login'); // 'login', 'otp', 'form'
@@ -31,8 +32,11 @@ export default function StartFundraiser() {
             </div>
             
             <div className="relative z-10 w-full flex justify-center">
-               {step === 'login' && <LoginGateCard onSendOtp={handleSendOtp} />}
-               {step === 'otp' && <OtpVerifyCard onVerify={handleVerifyOtp} />}
+               <OtpVerification 
+                 title="Start Fundraiser Login" 
+                 subtitle="Verify your mobile to access the secure Fundraising Request workspace." 
+                 onSuccess={handleVerifyOtp} 
+               />
             </div>
           </div>
         )}

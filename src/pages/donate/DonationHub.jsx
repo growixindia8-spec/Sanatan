@@ -3,10 +3,12 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import AmountSelector from '../../components/donate/AmountSelector';
 import ScanAndPayCard from '../../components/donate/ScanAndPayCard';
+import BankTransferForm from '../../components/donate/BankTransferForm';
 import Newsletter from '../../components/Newsletter';
 
 export default function DonationHub() {
   const [contributionType, setContributionType] = useState('Monthly');
+  const [paymentMethod, setPaymentMethod] = useState('online');
 
   const types = ['One Time', 'Monthly', 'Quarterly', 'Yearly'];
 
@@ -43,112 +45,127 @@ export default function DonationHub() {
                     <p className="text-gray-500 text-sm">Fill in your details and choose how you want to contribute.</p>
                   </div>
                   <div className="flex bg-gray-100 p-1 rounded-lg">
-                    <button className="bg-white text-saffron font-bold text-sm px-4 py-1.5 rounded shadow-sm">Online</button>
-                    <button className="text-gray-500 font-medium text-sm px-4 py-1.5 hover:text-gray-700">Offline</button>
-                  </div>
-                </div>
-
-                {/* Contribution Type */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {types.map(type => (
-                    <button
-                      key={type}
-                      onClick={() => setContributionType(type)}
-                      className={`px-5 py-2 rounded-full font-semibold text-sm transition-colors ${
-                        contributionType === type 
-                          ? 'bg-charcoal text-white shadow-md' 
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
+                    <button 
+                      onClick={() => setPaymentMethod('online')}
+                      className={`font-bold text-sm px-4 py-1.5 rounded shadow-sm transition-colors ${paymentMethod === 'online' ? 'bg-white text-saffron' : 'text-gray-500 hover:text-gray-700'}`}
                     >
-                      {type}
+                      Online
                     </button>
-                  ))}
-                </div>
-
-                {contributionType === 'Monthly' && (
-                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-6">
-                    <p className="text-sm text-orange-800">
-                      <strong>Recurring Donation Flow Active</strong> — AutoPay / ECS Subscription will be set up for your <strong>Monthly</strong> contribution.
-                    </p>
-                  </div>
-                )}
-
-                {/* Amount Selector Component */}
-                <AmountSelector contributionType={contributionType} />
-
-                {/* Project / Donation For */}
-                <div className="mb-6">
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Project / Donation For</label>
-                  <select className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron text-charcoal font-medium">
-                    <option>सनातन संस्कृति एवं जनजागरण</option>
-                    <option>अन्न सेवा एवं भोजन सहायता</option>
-                    <option>चिकित्सा एवं स्वास्थ्य सहायता</option>
-                    <option>गौ सेवा एवं संरक्षण</option>
-                    <option>शिक्षा एवं संस्कार सहायता</option>
-                  </select>
-                </div>
-
-                {/* 80G Banner */}
-                <div className="bg-orange-50/80 border border-orange-200 rounded-xl p-4 flex gap-4 mb-8">
-                  <div className="text-2xl mt-1">🎁</div>
-                  <div>
-                    <p className="font-bold text-orange-900 mb-1">80G Tax Benefit Available</p>
-                    <p className="text-sm text-orange-800 font-devanagari mb-1">Eligible Donations पर आयकर अधिनियम के प्रचलित नियमों के अनुसार Tax Exemption का लाभ प्राप्त किया जा सकता है।</p>
-                    <p className="text-xs font-mono text-orange-700 bg-orange-200/50 inline-block px-2 py-0.5 rounded">80G Registration No. ABTCS1749KF20261</p>
+                    <button 
+                      onClick={() => setPaymentMethod('offline')}
+                      className={`font-bold text-sm px-4 py-1.5 rounded shadow-sm transition-colors ${paymentMethod === 'offline' ? 'bg-white text-saffron' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                      Offline
+                    </button>
                   </div>
                 </div>
 
-                {/* Form Fields */}
-                <div className="space-y-5 mb-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-1">Full Name *</label>
-                      <input type="text" className="w-full p-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-saffron" placeholder="Your Name" />
+                {paymentMethod === 'online' ? (
+                  <>
+                    {/* Contribution Type */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {types.map(type => (
+                        <button
+                          key={type}
+                          onClick={() => setContributionType(type)}
+                          className={`px-5 py-2 rounded-full font-semibold text-sm transition-colors ${
+                            contributionType === type 
+                              ? 'bg-charcoal text-white shadow-md' 
+                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          }`}
+                        >
+                          {type}
+                        </button>
+                      ))}
                     </div>
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-1">Mobile *</label>
-                      <input type="text" className="w-full p-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-saffron" placeholder="Phone Number" />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-1">Email *</label>
-                      <input type="email" className="w-full p-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-saffron" placeholder="Email Address" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-1">Payment Mode</label>
-                      <select className="w-full p-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-saffron">
-                        <option>Online (Razorpay / UPI)</option>
-                        <option>Bank Transfer (NEFT/RTGS)</option>
+
+                    {contributionType === 'Monthly' && (
+                      <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-6">
+                        <p className="text-sm text-orange-800">
+                          <strong>Recurring Donation Flow Active</strong> — AutoPay / ECS Subscription will be set up for your <strong>Monthly</strong> contribution.
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Amount Selector Component */}
+                    <AmountSelector contributionType={contributionType} />
+
+                    {/* Project / Donation For */}
+                    <div className="mb-6">
+                      <label className="block text-sm font-bold text-gray-700 mb-2">Project / Donation For</label>
+                      <select className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron text-charcoal font-medium">
+                        <option>सनातन संस्कृति एवं जनजागरण</option>
+                        <option>अन्न सेवा एवं भोजन सहायता</option>
+                        <option>चिकित्सा एवं स्वास्थ्य सहायता</option>
+                        <option>गौ सेवा एवं संरक्षण</option>
+                        <option>शिक्षा एवं संस्कार सहायता</option>
                       </select>
                     </div>
-                  </div>
-                  
-                  <div className="pt-2">
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input type="checkbox" className="mt-1 w-4 h-4 text-saffron focus:ring-saffron rounded border-gray-300" />
+
+                    {/* 80G Banner */}
+                    <div className="bg-orange-50/80 border border-orange-200 rounded-xl p-4 flex gap-4 mb-8">
+                      <div className="text-2xl mt-1">🎁</div>
                       <div>
-                        <p className="font-bold text-charcoal">I Want To Claim 80G Tax Benefit</p>
-                        <p className="text-xs text-gray-500 mt-0.5">PAN is required for 80G verification.</p>
+                        <p className="font-bold text-orange-900 mb-1">80G Tax Benefit Available</p>
+                        <p className="text-sm text-orange-800 font-devanagari mb-1">Eligible Donations पर आयकर अधिनियम के प्रचलित नियमों के अनुसार Tax Exemption का लाभ प्राप्त किया जा सकता है।</p>
+                        <p className="text-xs font-mono text-orange-700 bg-orange-200/50 inline-block px-2 py-0.5 rounded">80G Registration No. ABTCS1749KF20261</p>
                       </div>
-                    </label>
-                  </div>
-                </div>
+                    </div>
 
-                {/* Security Note */}
-                <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg mb-6 flex gap-3 items-start">
-                  <div className="text-amber-500 mt-0.5">⚠️</div>
-                  <p className="text-sm text-amber-800 font-devanagari">
-                    <strong>Security Note:</strong> भुगतान करते समय कृपया सुनिश्चित करें कि स्क्रीन पर <strong>'Sanatan Dharm Manav Kalyan Foundation'</strong> नाम प्रदर्शित हो रहा हो। नाम सत्यापित करने के बाद ही भुगतान करें।
-                  </p>
-                </div>
+                    {/* Form Fields */}
+                    <div className="space-y-5 mb-8">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                          <label className="block text-sm font-bold text-gray-700 mb-1">Full Name *</label>
+                          <input type="text" className="w-full p-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-saffron" placeholder="Your Name" />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-bold text-gray-700 mb-1">Mobile *</label>
+                          <input type="text" className="w-full p-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-saffron" placeholder="Phone Number" />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                          <label className="block text-sm font-bold text-gray-700 mb-1">Email *</label>
+                          <input type="email" className="w-full p-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-saffron" placeholder="Email Address" />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-bold text-gray-700 mb-1">Payment Mode</label>
+                          <select className="w-full p-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-saffron" disabled>
+                            <option>Online (Razorpay / UPI)</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      <div className="pt-2">
+                        <label className="flex items-start gap-3 cursor-pointer">
+                          <input type="checkbox" className="mt-1 w-4 h-4 text-saffron focus:ring-saffron rounded border-gray-300" />
+                          <div>
+                            <p className="font-bold text-charcoal">I Want To Claim 80G Tax Benefit</p>
+                            <p className="text-xs text-gray-500 mt-0.5">PAN is required for 80G verification.</p>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
 
-                <button className="w-full bg-[#FF6A00] text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition-all hover:shadow-lg shadow-orange-500/30">
-                  {contributionType === 'One Time' ? 'Donate Now with Razorpay' : `Start ${contributionType} AutoPay with Razorpay`}
-                </button>
-                <p className="text-center text-xs text-gray-500 mt-4">
-                  Secure payment options supported: UPI, QR, bank transfer, cards, and net banking.
-                </p>
+                    {/* Security Note */}
+                    <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg mb-6 flex gap-3 items-start">
+                      <div className="text-amber-500 mt-0.5">⚠️</div>
+                      <p className="text-sm text-amber-800 font-devanagari">
+                        <strong>Security Note:</strong> भुगतान करते समय कृपया सुनिश्चित करें कि स्क्रीन पर <strong>'Sanatan Dharm Manav Kalyan Foundation'</strong> नाम प्रदर्शित हो रहा हो। नाम सत्यापित करने के बाद ही भुगतान करें।
+                      </p>
+                    </div>
+
+                    <button className="w-full bg-[#FF6A00] text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition-all hover:shadow-lg shadow-orange-500/30">
+                      {contributionType === 'One Time' ? 'Donate Now with Razorpay' : `Start ${contributionType} AutoPay with Razorpay`}
+                    </button>
+                    <p className="text-center text-xs text-gray-500 mt-4">
+                      Secure payment options supported: UPI, QR, bank transfer, cards, and net banking.
+                    </p>
+                  </>
+                ) : (
+                  <BankTransferForm />
+                )}
               </div>
             </div>
 

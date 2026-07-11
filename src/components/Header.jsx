@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Menu, X, ChevronDown, Globe } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import DonateButton from './shared/DonateButton';
+import LanguageSelector from './shared/LanguageSelector';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,16 +61,19 @@ export default function Header() {
     {
       name: 'PARTNERS',
       items: [
-        { name: 'CSR Partnership', path: '/partners' },
+        { name: 'CSR Partnership', path: '/partners/csr' },
         { name: 'Sponsorship', path: '/partners' },
         { name: 'Become a Partner', path: '/partners' }
       ]
     },
     {
-      name: 'CONTACT',
+      name: 'MORE',
       items: [
-        { name: 'Contact Us', path: '#' },
-        { name: 'Raise a Complaint', path: '#' }
+        { name: 'Raise a Complaint', path: '/raise-a-complaint' },
+        { name: 'FAQ', path: '/faq' },
+        { name: 'Community Voices', path: '/community-voices' },
+        { name: 'Legal Documents', path: '/legal-documents' },
+        { name: 'Contact Us', path: '/contact-us' }
       ]
     }
   ];
@@ -213,21 +218,13 @@ export default function Header() {
 
           {/* Right Side Controls */}
           <div className="hidden lg:flex items-center space-x-4">
-            <button className="flex items-center space-x-1 text-gray-500 hover:text-saffron transition-colors font-medium text-sm">
-              <Globe size={16} />
-              <span>हिंदी</span>
-            </button>
-            <button className="bg-[#FF6A00] text-white px-6 py-2.5 rounded-full font-bold hover:bg-orange-600 transition-all hover:scale-105 shadow-md shadow-orange-500/20 active:scale-95 text-sm uppercase tracking-wider">
-              Donate Now
-            </button>
+            <LanguageSelector />
+            <DonateButton />
           </div>
 
           {/* Mobile Menu Button */}
           <div className="lg:hidden flex items-center space-x-4">
-            <button className="flex items-center space-x-1 text-gray-500 hover:text-saffron transition-colors font-medium text-sm">
-              <Globe size={16} />
-              <span>हिंदी</span>
-            </button>
+            <LanguageSelector />
             <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700 hover:text-saffron p-1">
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
@@ -325,9 +322,7 @@ export default function Header() {
               })}
 
               <div className="pt-4 flex flex-col space-y-4">
-                <button className="bg-[#FF6A00] text-white py-3 rounded-full font-bold hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/10 text-center w-full uppercase tracking-wider">
-                  Donate Now
-                </button>
+                <DonateButton className="w-full py-3" />
               </div>
             </div>
           </motion.div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Share2, ArrowLeft, ArrowRight, HelpCircle, Utensils, Home, GraduationCap, Wrench, Shield } from 'lucide-react';
+import DonateButton from './shared/DonateButton';
 
 const tabsData = [
   {
@@ -170,10 +171,11 @@ export default function FutureMissions() {
                 
                 {/* Two Orange Pill Buttons Side-by-Side */}
                 <div className="flex flex-col sm:flex-row gap-3.5 w-full">
-                  <button className="flex-1 bg-[#FF6A00] text-white py-3 px-6 rounded-full font-bold hover:bg-orange-600 transition-all hover:scale-102 active:scale-98 shadow-md shadow-orange-500/10 text-sm uppercase tracking-wider text-center">
-                    Donate Now
-                  </button>
-                  <button className="flex-1 border-2 border-[#FF6A00] text-[#FF6A00] py-3 px-6 rounded-full font-bold hover:bg-orange-50/50 transition-all hover:scale-102 active:scale-98 text-sm uppercase tracking-wider flex items-center justify-center gap-2">
+                  <DonateButton 
+                    campaign={tabsData[activeTab].title}
+                    className="flex-1 py-3 px-6 text-sm" 
+                  />
+                  <button className="flex-1 border-2 border-[#FF6A00] text-[#FF6A00] py-3 px-6 rounded-full font-bold hover:bg-orange-50/50 transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2 btn-animated">
                     <Share2 size={16} />
                     <span>Share</span>
                   </button>

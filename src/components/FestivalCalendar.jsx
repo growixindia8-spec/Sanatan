@@ -1,4 +1,5 @@
 import React from 'react';
+import DonateButton from './shared/DonateButton';
 
 export default function FestivalCalendar() {
   return (
@@ -32,8 +33,8 @@ export default function FestivalCalendar() {
               <p className="text-sm text-gray-600">Join us in feeding 5,000 devotees in Haridwar.</p>
             </div>
             <div className="flex gap-4">
-              <button className="bg-saffron text-white px-6 py-2 rounded-full font-bold">Donate Now</button>
-              <button className="bg-white border border-gray-300 px-6 py-2 rounded-full font-bold">Share</button>
+              <DonateButton campaign="Guru Purnima Annadanam" className="px-6 py-2" />
+              <button className="bg-white border border-gray-300 px-6 py-2 rounded-full font-bold btn-animated">Share</button>
             </div>
           </div>
         </div>

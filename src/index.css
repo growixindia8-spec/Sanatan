@@ -7,12 +7,15 @@
     @apply bg-cream text-charcoal font-sans antialiased;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-devanagari font-bold;
+    @apply font-devanagari font-bold text-[#FF6600];
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  .btn-animated {
+    @apply transition-all duration-200 ease-in-out hover:scale-[1.03] hover:shadow-lg active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-saffron focus:ring-offset-2;
   }
 }

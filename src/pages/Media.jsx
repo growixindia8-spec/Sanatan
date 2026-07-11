@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Newsletter from '../components/Newsletter';
 import MediaTabs from '../components/media/MediaTabs';
+import DonateButton from '../components/shared/DonateButton';
 
 export default function Media() {
   return (
@@ -38,10 +39,8 @@ export default function Media() {
               आपका सहयोग किसी के जीवन में नई उम्मीद ला सकता है। सेवा, सहयोग एवं सहभागिता के माध्यम से समाज हित के अभियानों से जुड़ें और सकारात्मक परिवर्तन का हिस्सा बनें।
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-saffron font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all uppercase tracking-wider">
-                Donate Now
-              </button>
-              <button className="bg-charcoal text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-800 hover:scale-105 transition-all uppercase tracking-wider">
+              <DonateButton className="bg-white text-saffron hover:bg-gray-50" />
+              <button className="bg-charcoal text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-800 transition-all uppercase tracking-wider btn-animated">
                 Join the Mission
               </button>
             </div>

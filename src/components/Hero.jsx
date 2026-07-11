@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import DonateButton from './shared/DonateButton';
 
 const slides = [
   {
@@ -104,9 +105,13 @@ export default function Hero() {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.6, duration: 0.5 }}
                 >
-                  <button className="bg-[#FF6A00] text-white px-8 py-3 rounded-full font-bold hover:bg-orange-600 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-orange-500/20 text-sm uppercase tracking-wider">
-                    {slides[currentSlide].buttonText}
-                  </button>
+                  {slides[currentSlide].buttonText === 'Donate Now' ? (
+                    <DonateButton className="px-8 py-3 text-sm" />
+                  ) : (
+                    <button className="bg-[#FF6A00] text-white px-8 py-3 rounded-full font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 text-sm uppercase tracking-wider btn-animated">
+                      {slides[currentSlide].buttonText}
+                    </button>
+                  )}
                 </motion.div>
               </div>
             </div>

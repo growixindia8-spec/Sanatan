@@ -9,6 +9,7 @@ import FinalCTA from '../../components/FinalCTA';
 import Newsletter from '../../components/Newsletter';
 import Footer from '../../components/Footer';
 import WhatsAppButton from '../../components/WhatsAppButton';
+import DonateButton from '../../components/shared/DonateButton';
 
 // Import Static Data
 import { festivalsData } from '../../data/festivals';
@@ -147,16 +148,10 @@ export default function FestivalSevaCalendar() {
                   </div>
 
                   {/* Donate Button */}
-                  <a 
-                    href={fest.donationLink}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      alert(`Redirecting to donation checkout for: ${fest.name} (${fest.mission})`);
-                    }}
-                    className="block w-full text-center py-2.5 bg-[#FF6A00] hover:bg-[#FF7518] text-white rounded-full font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-md shadow-orange-500/10"
-                  >
-                    Donate Now
-                  </a>
+                  <DonateButton 
+                    campaign={fest.name}
+                    className="w-full text-center py-2.5 bg-[#FF6A00] hover:bg-[#FF7518] text-white rounded-full font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-md shadow-orange-500/10 block"
+                  />
                 </div>
               ))}
             </div>
