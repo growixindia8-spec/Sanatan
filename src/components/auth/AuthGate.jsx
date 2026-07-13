@@ -4,8 +4,9 @@ import OtpVerification from './OtpVerification';
 import SetPasswordStep from './SetPasswordStep';
 import LoginWithPassword from './LoginWithPassword';
 import ForgotPassword from './ForgotPassword';
+import { usePortalAuth } from '../../context/PortalAuthContext';
 
-export default function AuthGate({ onSuccess, title = "Secure Access", subtitle = "Verify your account to continue." }) {
+export default function AuthGate({ onSuccess, title = "Secure Access", subtitle = "Verify your account to continue.", fullName = "", email = "" }) {
   const [activeTab, setActiveTab] = useState('login'); // 'login', 'register'
   const [registerStep, setRegisterStep] = useState('mobile'); // 'mobile', 'password'
   const [mobile, setMobile] = useState('');
@@ -14,23 +15,22 @@ export default function AuthGate({ onSuccess, title = "Secure Access", subtitle 
   // Password Recovery Toggle
   const [showRecovery, setShowRecovery] = useState(false);
 
+  const { registerUser } = usePortalAuth();
+
   const handleOtpVerified = (verifiedMobile) => {
     setMobile(verifiedMobile);
     setRegisterStep('password');
   };
 
-  const handleSetPassword = (password) => {
-    let savedUsers = {};
-    try {
-      savedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '{}');
-    } catch (e) {
-      savedUsers = {};
+  const handleSetPassword = async (password) => {
+    setError('');
+    const success = await registerUser(mobile, password, fullName, email);
+    if (success) {
+      // Success callback
+      onSuccess(mobile);
+    } else {
+      setError('पंजीकरण विफल। कृपया पुनः प्रयास करें। / Registration failed. Please try again.');
     }
-    savedUsers[mobile] = password;
-    localStorage.setItem('registeredUsers', JSON.stringify(savedUsers));
-
-    // Success callback
-    onSuccess(mobile);
   };
 
   const handleLoginSuccess = (userMobile) => {
@@ -123,7 +123,7 @@ export default function AuthGate({ onSuccess, title = "Secure Access", subtitle 
               // REGISTER FLOW STEPS
               <div>
                 {registerStep === 'mobile' && (
-                  <OtpVerification onVerified={handleOtpVerified} />
+                  <OtpVerification purpose="register" onVerified={handleOtpVerified} />
                 )}
 
                 {registerStep === 'password' && (

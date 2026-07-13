@@ -1,4 +1,4 @@
-const Member = require('../models/Member');
+const Membership = require('../models/Membership');
 const Certificate = require('../models/Certificate');
 const { generateMemberId } = require('../utils/generateMemberId');
 const { generateQrCode } = require('../utils/generateQrCode');
@@ -20,7 +20,7 @@ exports.registerMember = async (req, res, next) => {
     const photoUrl = req.files && req.files.photo ? req.files.photo[0].path : null;
     const idProofUrl = req.files && req.files.idProof ? req.files.idProof[0].path : null;
 
-    const newMember = await Member.create({
+    const newMember = await Membership.create({
       fullName,
       mobile,
       email,
@@ -45,7 +45,9 @@ exports.registerMember = async (req, res, next) => {
       success: true,
       message: 'Membership registration submitted successfully. Please proceed to payment step.',
       memberId: null,
-      id: newMember._id
+      id: newMember._id,
+      membershipId: newMember._id,
+      amount: newMember.amount
     });
 
   } catch (err) {
@@ -62,7 +64,7 @@ exports.confirmPayment = async (req, res, next) => {
   }
 
   try {
-    const member = await Member.findById(id);
+    const member = await Membership.findById(id);
     if (!member) {
       return res.status(404).json({ success: false, message: 'Membership record not found' });
     }
@@ -87,13 +89,13 @@ exports.approveMember = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const member = await Member.findById(id);
+    const member = await Membership.findById(id);
     if (!member) {
       return res.status(404).json({ success: false, message: 'Membership record not found' });
     }
 
     // Allocate ID
-    const memberId = await generateMemberId(member.state, Member);
+    const memberId = await generateMemberId(member.state, Membership);
     member.memberId = memberId;
 
     // Generate QR
@@ -141,7 +143,7 @@ exports.rejectMember = async (req, res, next) => {
   const { reason } = req.body;
 
   try {
-    const member = await Member.findById(id);
+    const member = await Membership.findById(id);
     if (!member) {
       return res.status(404).json({ success: false, message: 'Membership record not found' });
     }
@@ -161,7 +163,7 @@ exports.verifyPublicMember = async (req, res, next) => {
   const { memberId } = req.params;
 
   try {
-    const member = await Member.findOne({ memberId });
+    const member = await Membership.findOne({ memberId });
     if (!member) {
       return res.status(404).json({ success: false, message: 'No registered member matches the provided ID' });
     }
@@ -181,3 +183,36 @@ exports.verifyPublicMember = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getMyApplications = async (req, res, next) => {
+  try {
+    const mobile = req.user.mobile;
+    const applications = await Membership.find({ mobile }).sort({ createdAt: -1 });
+    
+    return res.status(200).json({
+      success: true,
+      applications
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.markPaidTest = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const member = await Membership.findById(id);
+    if (!member) {
+      return res.status(404).json({ success: false, message: 'Membership record not found' });
+    }
+    member.paymentStatus = 'paid';
+    await member.save();
+    return res.status(200).json({
+      success: true,
+      message: 'Test payment marked paid successfully'
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+

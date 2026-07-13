@@ -1,33 +1,24 @@
 import React, { useState } from 'react';
 import { Lock, ArrowLeft } from 'lucide-react';
 import OtpVerification from './OtpVerification';
+import { api } from '../../lib/apiClient';
 
 export default function ForgotPassword({ onBack, onResetSuccess }) {
   const [step, setStep] = useState('verify'); // 'verify', 'reset'
   const [mobile, setMobile] = useState('');
+  const [otp, setOtp] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleOtpVerified = (verifiedMobile) => {
+  const handleOtpVerified = (verifiedMobile, verifiedOtp) => {
     setError('');
-    let savedUsers = {};
-    try {
-      savedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '{}');
-    } catch (err) {
-      savedUsers = {};
-    }
-    
-    if (!savedUsers[verifiedMobile]) {
-      setError('यह मोबाइल नंबर पंजीकृत नहीं है। / This mobile number is not registered.');
-      return;
-    }
-
     setMobile(verifiedMobile);
+    setOtp(verifiedOtp);
     setStep('reset');
   };
 
-  const handleResetPassword = (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -40,16 +31,12 @@ export default function ForgotPassword({ onBack, onResetSuccess }) {
       return;
     }
 
-    let savedUsers = {};
     try {
-      savedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '{}');
+      await api.resetPassword(mobile, otp, password);
+      onResetSuccess(mobile);
     } catch (err) {
-      savedUsers = {};
+      setError(err.message || 'रिसेट विफल। कृपया पुनः प्रयास करें। / Reset failed. Please try again.');
     }
-    savedUsers[mobile] = password;
-    localStorage.setItem('registeredUsers', JSON.stringify(savedUsers));
-
-    onResetSuccess(mobile);
   };
 
   return (
@@ -73,7 +60,7 @@ export default function ForgotPassword({ onBack, onResetSuccess }) {
             <h3 className="text-lg font-bold text-charcoal">Reset Password</h3>
             <p className="text-xs text-gray-500 mt-1">ओटीपी द्वारा पासवर्ड रिसेट करें</p>
           </div>
-          <OtpVerification onVerified={handleOtpVerified} />
+          <OtpVerification purpose="reset-password" onVerified={handleOtpVerified} />
         </div>
       ) : (
         <form onSubmit={handleResetPassword} className="space-y-4">

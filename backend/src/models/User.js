@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   fullName: String,
   email: String,
   role: { type: String, enum: ['donor', 'volunteer', 'coordinator', 'admin'], default: 'donor' },
+  zone: { type: String },
   isVerified: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });

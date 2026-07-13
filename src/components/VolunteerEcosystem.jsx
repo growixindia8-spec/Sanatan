@@ -1,194 +1,188 @@
-import React from 'react';
-import { ShieldCheck, Eye, Users, UserCheck, Heart } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-const cards = [
+const slides = [
   {
-    type: "light",
-    icon: ShieldCheck,
-    eyebrow: "FRONTLINE VOLUNTEERS",
+    key: "sanataniSena",
+    categoryParam: "sanatani-sena",
     title: "Sanatani Sena",
-    description: "समाज सेवा, अन्नदानम्, गौ सेवा, सांस्कृतिक जनजागरण एवं विभिन्न सेवा अभियानों में सक्रिय रूप से योगदान देने वाले समर्पित स्वयंसेवकों का संगठन।",
-    points: [
-      "Official ID Card & Uniform (जहाँ लागू हो)",
-      "Appointment Letter & Participation Certificate",
-      "Training, Recognition & Annual Awards Opportunities",
-      "सेवा अभियानों एवं विशेष कार्यक्रमों में सहभागिता"
-    ],
-    buttonText: "Join Sanatani Sena →"
+    cta: "Join Sanatani Sena →",
+    image: "/sanatani-sena.jpg"
   },
   {
-    type: "dark",
-    icon: Eye,
-    eyebrow: "COMMUNITY PROTECTION WING",
+    key: "vigilance",
+    categoryParam: "vigilance",
     title: "Vigilance Department",
-    description: "समाज में जागरूकता, सत्यापन, अनुशासन एवं सहयोग को बढ़ावा देने के लिए कार्यरत समर्पित टीम। यह विभाग संदिग्ध गतिविधियों, धोखाधड़ी, डुप्लीकेसी, महिला सुरक्षा एवं विभिन्न सामाजिक समस्याओं से संबंधित सूचनाओं के संकलन एवं उचित मार्गदर्शन में सहयोग करता है।",
-    points: [
-      "Official ID Card & Uniform (जहाँ लागू हो)",
-      "Appointment Letter & Participation Certificate",
-      "Training, Recognition & Annual Awards Opportunities",
-      "जागृतता एवं सत्यापन अभियानों में सहभागिता"
-    ],
-    buttonText: "Join Vigilance Department →"
+    cta: "Join Vigilance Department →",
+    image: "/vigilance-department.jpg"
   },
   {
-    type: "light",
-    icon: Users,
-    eyebrow: "COMMUNITY SERVICE NETWORK",
+    key: "sevaNetwork",
+    categoryParam: "seva-network",
     title: "Sanatan Seva Network",
-    description: "समाज के विभिन्न क्षेत्रों से जुड़े सेवा भाव रखने वाले व्यक्तियों, पेशेवरों एवं सहयोगकर्ताओं का एक सशक्त नेटवर्क, जो आवश्यकता पड़ने पर मार्गदर्शन, सहयोग एवं जनकल्याण कार्यों में अपनी विशेषज्ञता के माध्यम से योगदान देता है।",
-    points: [
-      "Official Membership Certificate",
-      "Verified Network Identity (जहाँ लागू हो)",
-      "Training, Recognition & Annual Awards Opportunities",
-      "सेवा, सहायता एवं जनकल्याण अभियानों में सहभागिता"
-    ],
-    buttonText: "Join Sanatan Seva Network →"
+    cta: "Join Seva Network →",
+    image: "/seva-network.jpg"
   },
   {
-    type: "light",
-    icon: UserCheck,
-    eyebrow: "LEADERSHIP & COORDINATION",
+    key: "activeMember",
+    categoryParam: "active-member",
     title: "Active Member",
-    description: "संस्था की गतिविधियों, सेवा अभियानों एवं जनजागरण कार्यों में नियमित रूप से सहभागिता करने वाले समर्पित सदस्य। Active Members संस्था और समाज के बीच एक महत्वपूर्ण सेतु के रूप में कार्य करते हैं।",
-    points: [
-      "Official Membership ID Card",
-      "Appointment Letter & Participation Certificate",
-      "Training, Recognition & Annual Awards Opportunities",
-      "विशेष कार्यक्रमों एवं सेवा अभियानों में प्राथमिक सहभागिता"
-    ],
-    buttonText: "Become an Active Member →"
+    cta: "Become Active Member →",
+    image: "/active-member.jpg"
   },
   {
-    type: "light",
-    icon: Heart,
-    eyebrow: "PATRON & SUPPORT CIRCLE",
-    title: "Supporting Member",
-    description: "संस्था के सेवा, संस्कार एवं जनकल्याण अभियानों को सशक्त बनाने वाले सम्मानित सहयोगी सदस्य। Supporting Members प्रत्यक्ष रूप से सेवा कार्यों में भाग लें या न लें, उनका सहयोग संस्था के विभिन्न सामाजिक एवं मानवीय प्रयासों को निरंतर आगे बढ़ाने में महत्वपूर्ण भूमिका निभाता है।",
-    points: [
-      "Official Membership Certificate",
-      "Special Recognition & Appreciation Opportunities",
-      "Annual Reports & Mission Updates Access",
-      "सेवा एवं जनकल्याण अभियानों के सहयोगी सदस्य"
-    ],
-    buttonText: "Become a Supporting Member →"
+    key: "patronMember",
+    categoryParam: "patron",
+    title: "Supporting / Patron Member",
+    cta: "Become Patron Member →",
+    image: "/patron-member.jpg"
   }
 ];
 
-export default function VolunteerEcosystem() {
+export default function VolunteerEcosystem({ onCardClick, hideHeader = false }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      const maxIdx = isMobile ? slides.length - 1 : slides.length - 3;
+      setCurrentIndex((prev) => (prev >= maxIdx ? 0 : prev + 1));
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [isPaused, isMobile]);
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    const maxIdx = isMobile ? slides.length - 1 : slides.length - 3;
+    setCurrentIndex((prev) => (prev === 0 ? maxIdx : prev - 1));
+  };
+
+  const handleNext = (e) => {
+    e.stopPropagation();
+    const maxIdx = isMobile ? slides.length - 1 : slides.length - 3;
+    setCurrentIndex((prev) => (prev >= maxIdx ? 0 : prev + 1));
+  };
+
+  const handleCardClick = (slide) => {
+    if (onCardClick) {
+      onCardClick(slide.key);
+    } else {
+      navigate(`/join-the-mission?category=${slide.categoryParam}`);
+    }
+  };
+
+  const totalDots = isMobile ? 5 : 3;
+
   return (
-    <section className="py-20 bg-gray-50 border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Heading */}
-        <div className="text-center mb-14">
-          <h2 className="text-3xl md:text-4xl font-bold font-sans text-charcoal">
-            Volunteer Ecosystem
-          </h2>
-          <p className="text-[#FF6B00] font-devanagari font-bold text-[15px] tracking-wide mt-2">
-            साथ आइए। सेवा से जुड़िए। परिवर्तन का हिस्सा बनिए।
-          </p>
-        </div>
+    <section 
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      className={`bg-gray-50 select-none ${hideHeader ? 'py-2' : 'py-16 border-b border-gray-100'}`}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {!hideHeader && (
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold font-sans text-charcoal">
+              Volunteer Ecosystem
+            </h2>
+            <p className="text-[#FF6B00] font-devanagari font-bold text-[15px] tracking-wide mt-2">
+              साथ आइए। सेवा से जुड़िए। परिवर्तन का हिस्सा बनिए।
+            </p>
+            <div className="h-1.5 w-24 bg-[#FF6B00] mx-auto mt-4 rounded-full" />
+          </div>
+        )}
 
-        {/* 5-Card Grid Layout (3 in a row, wraps on md/lg) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cards.map((c, idx) => {
-            const Icon = c.icon;
-            
-            if (c.type === "dark") {
-              return (
+        <div className="relative">
+          {/* Card Viewport */}
+          <div className="overflow-hidden relative px-1">
+            <div 
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{
+                transform: `translateX(-${currentIndex * (isMobile ? 100 : 33.333)}%)`
+              }}
+            >
+              {slides.map((slide) => (
                 <div 
-                  key={idx}
-                  className="bg-gradient-to-br from-[#3D1420] to-[#1F0A10] text-white rounded-2xl p-6 shadow-md border border-[#3D1420]/50 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+                  key={slide.key} 
+                  className="w-full md:w-1/3 shrink-0 px-2 sm:px-3 py-4"
                 >
-                  <div>
-                    {/* Dark Card Header & Icon */}
-                    <div className="flex items-start justify-between mb-5">
-                      <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-yellow-500">
-                        <Icon size={22} />
-                      </div>
-                      <span className="text-[10px] font-extrabold text-[#FF6B00] tracking-wider uppercase font-sans mt-1">
-                        {c.eyebrow}
-                      </span>
-                    </div>
-
-                    {/* Title & Desc */}
-                    <h3 className="text-xl font-bold font-sans mb-3 text-white">
-                      {c.title}
-                    </h3>
-                    <p className="text-gray-300 font-devanagari text-[13px] leading-relaxed mb-5">
-                      {c.description}
-                    </p>
-
-                    {/* Points */}
-                    <ul className="space-y-2 mb-6 font-devanagari text-[13px]">
-                      {c.points.map((p, pIdx) => (
-                        <li key={pIdx} className="flex items-start gap-2 text-gray-300">
-                          <span className="text-[#FF6B00] mt-1 font-bold">•</span>
-                          <span>{p}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Button */}
-                  <Link 
-                    to="/join-the-mission"
-                    className="w-full bg-[#FF6A00] text-white py-3 rounded-full font-bold text-xs uppercase tracking-wider hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/10 text-center block"
+                  <div 
+                    onClick={() => handleCardClick(slide)}
+                    className="relative rounded-3xl overflow-hidden shadow-md cursor-pointer group h-[380px] sm:h-[420px] border border-orange-500/10 transition-transform duration-350 hover:scale-[1.02] bg-charcoal"
                   >
-                    {c.buttonText}
-                  </Link>
-                </div>
-              );
-            }
-
-            return (
-              <div 
-                key={idx}
-                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-300 flex flex-col justify-between"
-              >
-                <div>
-                  {/* Light Card Header & Icon */}
-                  <div className="flex items-start justify-between mb-5">
-                    <div className="w-11 h-11 rounded-lg bg-orange-50 flex items-center justify-center text-[#FF6B00]">
-                      <Icon size={22} />
+                    {/* Full-bleed image */}
+                    <img 
+                      src={slide.image} 
+                      alt={slide.title} 
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        // Use a fallback if image fails to load
+                        e.target.src = "https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=1200";
+                      }}
+                    />
+                    {/* Bottom caption overlay (dark gradient overlay) */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent" />
+                    
+                    {/* White bold text caption at the bottom */}
+                    <div className="absolute bottom-8 left-6 right-6 text-left relative z-10">
+                      <h4 className="text-white text-xl md:text-2xl font-bold tracking-wide leading-tight group-hover:text-yellow-400 transition-colors font-serif">
+                        {slide.title}
+                      </h4>
+                      <div className="text-[#FF6600] font-bold text-sm mt-3 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                        <span>{slide.cta}</span>
+                      </div>
                     </div>
-                    <span className="text-[10px] font-extrabold text-[#FF6B00] tracking-wider uppercase font-sans mt-1">
-                      {c.eyebrow}
-                    </span>
                   </div>
-
-                  {/* Title & Desc */}
-                  <h3 className="text-xl font-bold font-sans mb-3 text-charcoal">
-                    {c.title}
-                  </h3>
-                  <p className="text-gray-500 font-devanagari text-[13px] leading-relaxed mb-5">
-                    {c.description}
-                  </p>
-
-                  {/* Points */}
-                  <ul className="space-y-2 mb-6 font-devanagari text-[13px]">
-                    {c.points.map((p, pIdx) => (
-                      <li key={pIdx} className="flex items-start gap-2 text-gray-600">
-                        <span className="text-[#FF6B00] mt-1 font-bold">•</span>
-                        <span>{p}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
+              ))}
+            </div>
+          </div>
 
-                {/* Button */}
-                <Link 
-                  to="/join-the-mission"
-                  className="w-full bg-[#FF6A00] text-white py-3 rounded-full font-bold text-xs uppercase tracking-wider hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/10 text-center block"
-                >
-                  {c.buttonText}
-                </Link>
-              </div>
-            );
-          })}
+          {/* Navigation Arrows */}
+          <button 
+            onClick={handlePrev}
+            className="absolute -left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/40 backdrop-blur-md hover:bg-white text-white hover:text-charcoal flex items-center justify-center transition-all z-20 shadow-md border border-white/20"
+            aria-label="Previous slide"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <button 
+            onClick={handleNext}
+            className="absolute -right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/40 backdrop-blur-md hover:bg-white text-white hover:text-charcoal flex items-center justify-center transition-all z-20 shadow-md border border-white/20"
+            aria-label="Next slide"
+          >
+            <ArrowRight size={18} />
+          </button>
         </div>
 
+        {/* Carousel Dot Indicators */}
+        <div className="flex justify-center space-x-2 mt-4">
+          {Array.from({ length: totalDots }).map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                currentIndex === idx 
+                  ? "w-6 bg-[#FF6A00]" 
+                  : "w-2 bg-gray-300 hover:bg-gray-400"
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -9,7 +9,6 @@ import StartFundraiser from './pages/donate/StartFundraiser';
 import ViewFundraisers from './pages/donate/ViewFundraisers';
 import EmergencyFundraiser from './pages/donate/EmergencyFundraiser';
 import Media from './pages/Media';
-import Portal from './pages/Portal';
 import Partners from './pages/Partners';
 import CsrPartnership from './pages/partners/CsrPartnership';
 import FaqPage from './pages/more/FaqPage';
@@ -20,35 +19,36 @@ import ContactUs from './pages/more/ContactUs';
 import SplashScreen from './components/shared/SplashScreen';
 import ChatbotWidget from './components/shared/ChatbotWidget';
 import JoinTheMission from './pages/JoinTheMission';
-
+import { PortalAuthProvider } from './context/PortalAuthContext';
 function App() {
   return (
     <>
       <SplashScreen />
-      <Router>
-        <Routes>
-          <Route path="/join-the-mission" element={<JoinTheMission />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/activities/current" element={<CurrentActivities />} />
-          <Route path="/activities/future-missions" element={<FutureMissionsPage />} />
-          <Route path="/activities/festival-seva-calendar" element={<FestivalSevaCalendar />} />
-          <Route path="/donate" element={<DonationHub />} />
-          <Route path="/donate/start-fundraiser" element={<StartFundraiser />} />
-          <Route path="/donate/view-fundraisers" element={<ViewFundraisers />} />
-          <Route path="/donate/emergency-fundraiser" element={<EmergencyFundraiser />} />
-          <Route path="/media" element={<Media />} />
-          <Route path="/portal" element={<Portal />} />
-          <Route path="/partners" element={<Partners />} />
-          <Route path="/partners/csr" element={<CsrPartnership />} />
-          <Route path="/faq" element={<FaqPage />} />
-          <Route path="/raise-a-complaint" element={<RaiseComplaint />} />
-          <Route path="/community-voices" element={<CommunityVoices />} />
-          <Route path="/legal-documents" element={<LegalDocuments />} />
-          <Route path="/contact-us" element={<ContactUs />} />
-        </Routes>
-        <ChatbotWidget />
-      </Router>
+      <PortalAuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/join-the-mission" element={<JoinTheMission />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/activities/current" element={<CurrentActivities />} />
+            <Route path="/activities/future-missions" element={<FutureMissionsPage />} />
+            <Route path="/activities/festival-seva-calendar" element={<FestivalSevaCalendar />} />
+            <Route path="/donate" element={<DonationHub />} />
+            <Route path="/donate/start-fundraiser" element={<StartFundraiser />} />
+            <Route path="/donate/view-fundraisers" element={<ViewFundraisers />} />
+            <Route path="/donate/emergency-fundraiser" element={<EmergencyFundraiser />} />
+            <Route path="/media" element={<Media />} />
+            <Route path="/partners" element={<Partners />} />
+            <Route path="/partners/csr" element={<CsrPartnership />} />
+            <Route path="/faq" element={<FaqPage />} />
+            <Route path="/raise-a-complaint" element={<RaiseComplaint />} />
+            <Route path="/community-voices" element={<CommunityVoices />} />
+            <Route path="/legal-documents" element={<LegalDocuments />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+          </Routes>
+          <ChatbotWidget />
+        </Router>
+      </PortalAuthProvider>
     </>
   );
 }

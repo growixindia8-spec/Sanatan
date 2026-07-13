@@ -1,28 +1,27 @@
 import React, { useState } from 'react';
 import { Lock, Phone, Eye, EyeOff } from 'lucide-react';
+import { usePortalAuth } from '../../context/PortalAuthContext';
 
 export default function LoginWithPassword({ onLoginSuccess, onForgotPasswordClick }) {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
+  const { login } = usePortalAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Fetch users from localStorage
-    let savedUsers = {};
     try {
-      savedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '{}');
+      const success = await login(mobile, password);
+      if (success) {
+        onLoginSuccess(mobile);
+      } else {
+        setError('गलत मोबाइल नंबर या पासवर्ड। / Invalid mobile number or password.');
+      }
     } catch (err) {
-      savedUsers = {};
-    }
-    
-    if (savedUsers[mobile] && savedUsers[mobile] === password) {
-      onLoginSuccess(mobile);
-    } else {
-      setError('गलत मोबाइल नंबर या पासवर्ड। / Invalid mobile number or password.');
+      setError(err.message || 'Login failed. Please try again.');
     }
   };
 

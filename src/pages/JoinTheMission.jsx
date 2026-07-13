@@ -1,10 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, ShieldAlert, Check, UserCheck, Heart, Users, Download, ArrowRight, X, QrCode } from 'lucide-react';
+import { Shield, ShieldAlert, Check, UserCheck, Heart, Users, ArrowRight, X, QrCode } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { membershipLevels } from '../data/membershipLevels';
 import AuthGate from '../components/auth/AuthGate';
+import { api } from '../lib/apiClient';
+import { usePortalAuth } from '../context/PortalAuthContext';
+import VolunteerEcosystem from '../components/VolunteerEcosystem';
+
+// Key responsibilities list for popup display
+const categoryResponsibilities = {
+  sanataniSena: [
+    "स्थानीय स्तर पर समाज सेवा एवं जनकल्याणकारी गतिविधियों में भाग लेना।",
+    "सनातन संस्कृति और संस्कारों के संरक्षण हेतु जनजागरण अभियानों का हिस्सा बनना।",
+    "आपदा राहत, सेवा ड्राइव, गौ सेवा और पर्यावरण संरक्षण जैसे कार्यों में स्वयंसेवक के रूप में सक्रिय रहना।",
+    "संस्था के संदेश और मानवतावादी पहल को जन-जन तक पहुँचाने में सहयोग देना।"
+  ],
+  activeMember: [
+    "संस्था की बैठकों, कार्यक्रमों और विशेष आयोजनों में नियमित रूप से उपस्थित होना।",
+    "फाउंडेशन के सेवा ड्राइवों और सामाजिक कल्याण गतिविधियों के संचालन में महत्वपूर्ण भूमिका निभाना।",
+    "संस्था के नियमों, मर्यादाओं और नैतिक मूल्यों का समाज में आदर्श रूप में प्रतिनिधित्व करना।",
+    "समाज के पिछड़े और जरूरतमंद वर्गों की सहायता के लिए जागरूकता फैलाना।"
+  ],
+  vigilance: [
+    "समाजिक Verification, सत्यापन और अनुशासनात्मक अभियानों में सहयोग देना।",
+    "संस्था के नाम पर होने वाली किसी भी धोखाधड़ी या अनधिकृत गतिविधियों के प्रति सचेत रहना और रिपोर्ट करना।",
+    "समाज में सुरक्षा, Fraud Awareness और जन सहायता कार्यों में सक्रिय निगरानी रखना।",
+    "अनुशासन समिति के निर्देशों के अनुसार सत्यापन और सहायता कार्यों का संचालन करना।"
+  ],
+  sevaNetwork: [
+    "अपने पेशेवर ज्ञान (डॉक्टर, अधिवक्ता, शिक्षक, व्यापारी, सीए, तकनीकी विशेषज्ञ) का उपयोग समाज कल्याण के लिए करना।",
+    "संस्था से जुड़े जरूरतमंद लोगों को निशुल्क अथवा अत्यंत रियायती दरों पर अपनी सेवाएं प्रदान करना।",
+    "समय-समय पर आयोजित होने वाले चिकित्सा शिविरों, शैक्षिक कार्यशालाओं या कानूनी जागरूकता शिविरों में सहयोग देना।",
+    "सेवा नेटवर्क के अन्य सदस्यों के साथ मिलकर विशेषज्ञ सहायता प्रदान करना।"
+  ],
+  patronMember: [
+    "फाउंडेशन के कार्यों को सुचारु रूप से चलाने के लिए आर्थिक एवं सामाजिक सहयोग प्रदान करना।",
+    "संस्था के विकास, नई परियोजनाओं और भावी सेवा योजनाओं के निर्धारण में संरक्षक/मार्गदर्शक के रूप में कार्य करना।",
+    "विशेष बैठकों और राष्ट्रीय/राज्य स्तर के आयोजनों में सम्माननीय अतिथि के रूप में शामिल होना।",
+    "अपने अनुभवों और संपर्कों के माध्यम से फाउंडेशन के सेवा मिशन को सशक्त बनाना।"
+  ]
+};
 
 export default function JoinTheMission() {
   const [selectedCategoryKey, setSelectedCategoryKey] = useState(null);
@@ -16,9 +53,19 @@ export default function JoinTheMission() {
   
   // Step navigation
   const [currentStep, setCurrentStep] = useState('categories'); // 'categories', 'form', 'payment', 'thankyou'
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userMobile, setUserMobile] = useState('');
   const [showAuthModal, setShowAuthModal] = useState(false);
+
+  // Loading & Submission State
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [createdMembershipId, setCreatedMembershipId] = useState('');
+  const [paymentAmount, setPaymentAmount] = useState(0);
+  const [pendingSubmit, setPendingSubmit] = useState(false);
+
+  // Access shared auth state
+  const { user, isAuthenticated } = usePortalAuth();
+  const isLoggedIn = isAuthenticated;
+  const userMobile = user?.mobile || '';
 
   // Form inputs
   const [formData, setFormData] = useState({
@@ -42,57 +89,130 @@ export default function JoinTheMission() {
   const [joiningDate, setJoiningDate] = useState('');
 
   useEffect(() => {
-    // Check if user already logged in via session
-    const activeUser = sessionStorage.getItem('activeUserMobile');
-    if (activeUser) {
-      setIsLoggedIn(true);
-      setUserMobile(activeUser);
+    const queryParams = new URLSearchParams(window.location.search);
+    const categoryParam = queryParams.get('category');
+    const categoryQueryMap = {
+      'sanatani-sena': 'sanataniSena',
+      'vigilance': 'vigilance',
+      'seva-network': 'sevaNetwork',
+      'active-member': 'activeMember',
+      'patron': 'patronMember'
+    };
+    if (categoryParam && categoryQueryMap[categoryParam]) {
+      const catKey = categoryQueryMap[categoryParam];
+      handleOpenDetails(catKey);
     }
   }, []);
 
   const handleOpenDetails = (catKey) => {
     setSelectedCategoryKey(catKey);
-    // Select first level by default
-    setSelectedLevel(membershipLevels[catKey].levels[0]);
+    setSelectedLevel(null);
     setIsModalOpen(true);
   };
 
   const handleApplyNow = () => {
     setIsModalOpen(false);
-    if (!isLoggedIn) {
-      setShowAuthModal(true);
+    setCurrentStep('form');
+  };
+
+  const handleAuthSuccess = async (authenticatedMobile) => {
+    setShowAuthModal(false);
+    if (pendingSubmit) {
+      setPendingSubmit(false);
+      await submitRegistration(authenticatedMobile);
     } else {
       setCurrentStep('form');
     }
   };
 
-  const handleAuthSuccess = (mobile) => {
-    sessionStorage.setItem('activeUserMobile', mobile);
-    setIsLoggedIn(true);
-    setUserMobile(mobile);
-    setShowAuthModal(false);
-    setCurrentStep('form');
+  const submitRegistration = async (mobileToUse) => {
+    setSubmitting(true);
+    setSubmitError('');
+
+    const categoryMapToBackend = {
+      sanataniSena: 'sanatani-sena',
+      activeMember: 'active-member',
+      vigilance: 'vigilance',
+      sevaNetwork: 'seva-network',
+      patronMember: 'patron'
+    };
+
+    try {
+      const data = new FormData();
+      data.append('fullName', formData.fullName);
+      data.append('mobile', mobileToUse);
+      data.append('email', formData.email);
+      data.append('state', formData.state);
+      data.append('district', formData.district);
+      data.append('city', formData.city);
+      data.append('dob', formData.dob);
+      data.append('gender', formData.gender);
+      data.append('occupation', formData.occupation);
+      data.append('category', categoryMapToBackend[selectedCategoryKey] || selectedCategoryKey);
+      data.append('level', selectedLevel.name);
+      data.append('amount', selectedLevel.amount);
+      data.append('professionalCategory', customProfession || '');
+      data.append('message', formData.reason || 'Join the Mission Registration');
+      
+      if (formData.photo) data.append('photo', formData.photo);
+      if (formData.idProof) data.append('idProof', formData.idProof);
+
+      const res = await api.registerMembership(data);
+      if (res.success) {
+        setCreatedMembershipId(res.membershipId || res.id);
+        setPaymentAmount(res.amount || selectedLevel.amount);
+        setCurrentStep('payment');
+      } else {
+        setSubmitError(res.message || 'पंजीकरण सबमिट करने में विफल। / Failed to submit registration.');
+      }
+    } catch (err) {
+      setSubmitError(err.message || 'पंजीकरण विफल। कृपया इनपुट की जांच करें। / Registration failed. Please check inputs.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setCurrentStep('payment');
+    if (!selectedLevel) {
+      setSubmitError('कृपया सदस्यता स्तर का चयन करें। / Please select a membership level.');
+      return;
+    }
+
+    if (!isLoggedIn) {
+      setPendingSubmit(true);
+      setShowAuthModal(true);
+      return;
+    }
+
+    await submitRegistration(userMobile);
   };
 
-  const handlePaymentComplete = () => {
-    // Generate Member ID: e.g. SDMKF-MH-000104
-    const stateCode = (formData.state.slice(0, 2) || 'MH').toUpperCase();
-    const randomSeq = Math.floor(100000 + Math.random() * 900000);
-    setGeneratedMemberId(`SDMKF-${stateCode}-${randomSeq}`);
-    
-    const today = new Date().toLocaleDateString('hi-IN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-    setJoiningDate(today);
-    
-    setCurrentStep('thankyou');
+  const handlePaymentComplete = async () => {
+    if (!createdMembershipId) {
+      alert('सदस्यता पंजीकरण संदर्भ आईडी गुम है। / Missing application ID.');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await api.markPaidTest(createdMembershipId);
+      
+      const stateCode = (formData.state.slice(0, 2) || 'MH').toUpperCase();
+      const randomSeq = Math.floor(100000 + Math.random() * 900000);
+      setGeneratedMemberId(`SDMKF-${stateCode}-${randomSeq} (Pending Verification)`);
+      
+      const today = new Date().toLocaleDateString('hi-IN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      setJoiningDate(today);
+      setCurrentStep('thankyou');
+    } catch (err) {
+      alert(err.message || 'भुगतान सत्यापन विफल। / Payment verification failed.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const selectedCategory = selectedCategoryKey ? membershipLevels[selectedCategoryKey] : null;
@@ -131,109 +251,14 @@ export default function JoinTheMission() {
               </p>
             </div>
 
-            {/* Grid layout (5 cards) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-              
-              {/* Card 1 - Sanatani Sena */}
-              <div className="bg-white rounded-3xl p-6 shadow-sm border border-orange-100 hover:shadow-md transition-all flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-saffron mb-5">
-                    <Shield size={24} />
-                  </div>
-                  <h3 className="text-xl font-bold text-charcoal mb-2">🚩 Sanatani Sena</h3>
-                  <p className="text-xs text-gray-500 font-devanagari leading-relaxed mb-6">
-                    {membershipLevels.sanataniSena.description}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleOpenDetails('sanataniSena')}
-                  className="w-full bg-[#FF6A00] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-orange-600 transition-colors"
-                >
-                  View Details / Join Now
-                </button>
-              </div>
-
-              {/* Card 2 - Active Member */}
-              <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-saffron mb-5">
-                    <UserCheck size={24} />
-                  </div>
-                  <h3 className="text-xl font-bold text-charcoal mb-2">Active Member</h3>
-                  <p className="text-xs text-gray-500 font-devanagari leading-relaxed mb-6">
-                    {membershipLevels.activeMember.description}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleOpenDetails('activeMember')}
-                  className="w-full bg-[#FF6A00] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-orange-600 transition-colors"
-                >
-                  View Details / Become Member
-                </button>
-              </div>
-
-              {/* Card 3 - Vigilance Department */}
-              <div className="bg-[#3D1420] text-white rounded-3xl p-6 shadow-sm border border-red-950/20 hover:shadow-md transition-all flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-yellow-500 mb-5">
-                    <ShieldAlert size={24} />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Vigilance Department</h3>
-                  <p className="text-xs text-gray-300 font-devanagari leading-relaxed mb-6">
-                    {membershipLevels.vigilance.description}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleOpenDetails('vigilance')}
-                  className="w-full bg-[#FF6A00] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-orange-600 transition-colors"
-                >
-                  View Details / Join Vigilance
-                </button>
-              </div>
-
-              {/* Card 4 - Sanatan Seva Network */}
-              <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-saffron mb-5">
-                    <Users size={24} />
-                  </div>
-                  <h3 className="text-xl font-bold text-charcoal mb-2">Sanatan Seva Network</h3>
-                  <p className="text-xs text-gray-500 font-devanagari leading-relaxed mb-6">
-                    {membershipLevels.sevaNetwork.description}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleOpenDetails('sevaNetwork')}
-                  className="w-full bg-[#FF6A00] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-orange-600 transition-colors"
-                >
-                  View Details / Join Network
-                </button>
-              </div>
-
-              {/* Card 5 - Supporting / Patron Member */}
-              <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-saffron mb-5">
-                    <Heart size={24} />
-                  </div>
-                  <h3 className="text-xl font-bold text-charcoal mb-2">Supporting / Patron Member</h3>
-                  <p className="text-xs text-gray-500 font-devanagari leading-relaxed mb-6">
-                    {membershipLevels.patronMember.description}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleOpenDetails('patronMember')}
-                  className="w-full bg-[#FF6A00] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-orange-600 transition-colors"
-                >
-                  View Details / Become Patron
-                </button>
-              </div>
-
+            {/* Auto-slide Carousel */}
+            <div className="max-w-6xl mx-auto">
+              <VolunteerEcosystem hideHeader={true} onCardClick={handleOpenDetails} />
             </div>
           </div>
         )}
 
-        {/* STEP 2 & 3: Category Detail Modal */}
+        {/* Category Detail Modal (Popup: Category Details Only) */}
         <AnimatePresence>
           {isModalOpen && selectedCategory && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -257,70 +282,24 @@ export default function JoinTheMission() {
                 {/* Content */}
                 <div className="p-6 overflow-y-auto space-y-6 flex-grow">
                   
-                  {/* Select Level */}
                   <div>
-                    <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-3">Choose Level / स्तर चुनें</label>
-                    <div className="space-y-2.5">
-                      {selectedCategory.levels.map((lvl) => (
-                        <label
-                          key={lvl.id}
-                          className={`flex items-start gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${
-                            selectedLevel?.id === lvl.id
-                              ? 'border-[#FF6600] bg-orange-50/30'
-                              : 'border-gray-100 hover:border-gray-200 bg-gray-50/50'
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name="membership_level"
-                            checked={selectedLevel?.id === lvl.id}
-                            onChange={() => setSelectedLevel(lvl)}
-                            className="mt-1 border-gray-300 text-saffron focus:ring-saffron"
-                          />
-                          <div className="flex-grow">
-                            <div className="flex justify-between items-center">
-                              <span className="font-bold text-charcoal text-sm">{lvl.name}</span>
-                              <span className="text-[#FF6600] font-extrabold text-sm">₹{lvl.amount}</span>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-1 font-devanagari">{lvl.desc}</p>
-                            {lvl.requirement && lvl.requirement !== '—' && (
-                              <p className="text-[10px] text-red-500 font-bold mt-1">📋 Requirement: {lvl.requirement}</p>
-                            )}
-                          </div>
-                        </label>
-                      ))}
-                    </div>
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Category Description / विवरण</h4>
+                    <p className="text-sm text-gray-700 font-devanagari leading-relaxed">
+                      {selectedCategory.description}
+                    </p>
                   </div>
 
-                  {/* Dynamic amount show */}
-                  {selectedLevel && (
-                    <div className="bg-orange-50 border border-orange-100 rounded-2xl p-4 flex justify-between items-center">
-                      <span className="text-sm font-bold text-gray-700">Total Contribution Fee:</span>
-                      <span className="text-[#FF6600] font-black text-2xl">₹{selectedLevel.amount}</span>
-                    </div>
-                  )}
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Key Responsibilities & Role / मुख्य जिम्मेदारियाँ एवं भूमिका</h4>
+                    <ul className="list-disc pl-5 space-y-2 text-xs text-gray-600 font-devanagari leading-relaxed">
+                      {categoryResponsibilities[selectedCategoryKey]?.map((resp, i) => (
+                        <li key={i}>{resp}</li>
+                      ))}
+                    </ul>
+                  </div>
 
-                  {/* Professional Category Dropdown if Seva Network is selected */}
-                  {selectedCategoryKey === 'sevaNetwork' && (
-                    <div className="space-y-2">
-                      <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider">Select Profession *</label>
-                      <select
-                        value={customProfession}
-                        onChange={(e) => setCustomProfession(e.target.value)}
-                        required
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-saffron text-sm"
-                      >
-                        <option value="" disabled>Choose Profession</option>
-                        {selectedCategory.professions.map((prof) => (
-                          <option key={prof} value={prof}>{prof}</option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-
-                  {/* Note */}
-                  <div className="text-xs text-gray-500 font-devanagari leading-relaxed">
-                    📝 Note: सदस्यता आवेदन जमा करने के उपरांत पृष्ठभूमि सत्यापन और समीक्षा की जाएगी। सत्यापन पूरा होने पर ही आईडी कार्ड और प्रमाण पत्र जारी किए जाएंगे।
+                  <div className="text-xs text-gray-500 font-devanagari leading-relaxed bg-gray-50 border border-gray-100 p-4 rounded-2xl">
+                    📝 <strong>नोट:</strong> सदस्यता आवेदन जमा करने के उपरांत पृष्ठभूमि सत्यापन और समीक्षा की जाएगी। सत्यापन पूरा होने पर ही आईडी कार्ड और प्रमाण पत्र जारी किए जाएंगे।
                   </div>
                 </div>
 
@@ -334,10 +313,9 @@ export default function JoinTheMission() {
                   </button>
                   <button
                     onClick={handleApplyNow}
-                    disabled={selectedCategoryKey === 'sevaNetwork' && !customProfession}
-                    className="flex-1 py-3 bg-[#FF6A00] text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all shadow-md shadow-orange-500/20 disabled:opacity-50"
+                    className="flex-1 py-3 bg-[#FF6A00] text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all shadow-md shadow-orange-500/20"
                   >
-                    Apply Now
+                    I'm Interested / Apply Now
                   </button>
                 </div>
 
@@ -359,16 +337,18 @@ export default function JoinTheMission() {
                 </button>
                 <AuthGate
                   title="Verify Account"
-                  subtitle="Verify mobile number & set password to open membership registration form."
+                  subtitle="Verify mobile number & set password to complete your membership application."
                   onSuccess={handleAuthSuccess}
+                  fullName={formData.fullName}
+                  email={formData.email}
                 />
               </div>
             </div>
           )}
         </AnimatePresence>
 
-        {/* STEP 4: Registration Form */}
-        {currentStep === 'form' && selectedCategory && selectedLevel && (
+        {/* STEP 2/3: Registration Form (includes Level & Amount selection section) */}
+        {currentStep === 'form' && selectedCategory && (
           <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
             <h2 className="text-2xl font-bold text-charcoal mb-6 border-b border-gray-100 pb-3 flex justify-between items-center">
               <span>Membership Registration Form</span>
@@ -379,18 +359,6 @@ export default function JoinTheMission() {
 
             <form onSubmit={handleFormSubmit} className="space-y-6">
               
-              {/* Autofilled details display */}
-              <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-100 text-xs">
-                <div>
-                  <span className="text-gray-500">Selected Level:</span>
-                  <p className="font-bold text-charcoal text-sm mt-0.5">{selectedLevel.name}</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Fee Amount:</span>
-                  <p className="font-extrabold text-[#FF6600] text-sm mt-0.5">₹{selectedLevel.amount}</p>
-                </div>
-              </div>
-
               {/* Personal details */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
@@ -494,6 +462,24 @@ export default function JoinTheMission() {
                 </div>
               </div>
 
+              {/* Seva Network Professional Category Selector */}
+              {selectedCategoryKey === 'sevaNetwork' && (
+                <div>
+                  <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Select Profession *</label>
+                  <select
+                    value={customProfession}
+                    onChange={(e) => setCustomProfession(e.target.value)}
+                    required
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-saffron text-sm bg-white"
+                  >
+                    <option value="" disabled>Choose Profession</option>
+                    {selectedCategory.professions.map((prof) => (
+                      <option key={prof} value={prof}>{prof}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
               {/* File uploads */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
@@ -530,7 +516,51 @@ export default function JoinTheMission() {
                 ></textarea>
               </div>
 
-              {/* Declarations */}
+              {/* STEP 4: Level & Amount Selection (rendered inside registration form) */}
+              <div className="pt-6 border-t border-gray-150">
+                <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-3">Choose Level & Contribution Amount / स्तर एवं सहयोग राशि चुनें *</label>
+                <div className="space-y-2.5">
+                  {selectedCategory.levels.map((lvl) => (
+                    <label
+                      key={lvl.id}
+                      className={`flex items-start gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${
+                        selectedLevel?.id === lvl.id
+                          ? 'border-[#FF6600] bg-orange-50/30'
+                          : 'border-gray-100 hover:border-gray-200 bg-gray-50/50'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="membership_level"
+                        required
+                        checked={selectedLevel?.id === lvl.id}
+                        onChange={() => setSelectedLevel(lvl)}
+                        className="mt-1 border-gray-300 text-saffron focus:ring-saffron"
+                      />
+                      <div className="flex-grow">
+                        <div className="flex justify-between items-center">
+                          <span className="font-bold text-charcoal text-sm">{lvl.name}</span>
+                          <span className="text-[#FF6600] font-extrabold text-sm">₹{lvl.amount}</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1 font-devanagari">{lvl.desc}</p>
+                        {lvl.requirement && lvl.requirement !== '—' && (
+                          <p className="text-[10px] text-red-500 font-bold mt-1">📋 Requirement: {lvl.requirement}</p>
+                        )}
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Dynamic amount display */}
+              {selectedLevel && (
+                <div className="bg-orange-50 border border-orange-100 rounded-2xl p-4 flex justify-between items-center">
+                  <span className="text-sm font-bold text-gray-700">Total Contribution Fee:</span>
+                  <span className="text-[#FF6600] font-black text-2xl">₹{selectedLevel.amount}</span>
+                </div>
+              )}
+
+              {/* Declarations ( Oath + Terms Checkboxes ) */}
               <div className="space-y-4 pt-4 border-t border-gray-100">
                 <label className="flex items-start gap-3 cursor-pointer text-sm text-gray-600 hover:text-charcoal font-medium">
                   <input
@@ -557,18 +587,25 @@ export default function JoinTheMission() {
                 </label>
               </div>
 
+              {submitError && (
+                <div className="p-4 bg-red-50 text-red-650 text-red-700 border border-red-100 rounded-2xl text-xs font-bold leading-relaxed">
+                  ⚠️ {submitError}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="w-full bg-[#FF6A00] text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 text-sm uppercase tracking-wider"
+                disabled={submitting || !selectedLevel || (selectedCategoryKey === 'sevaNetwork' && !customProfession)}
+                className="w-full bg-[#FF6A00] text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 text-sm uppercase tracking-wider disabled:opacity-50"
               >
-                Submit Application & Proceed to Payment
+                {submitting ? 'Submitting Application...' : 'Submit Application & Proceed to Payment'}
               </button>
 
             </form>
           </div>
         )}
 
-        {/* STEP 5: Payment Selector */}
+        {/* STEP 5: Payment Selector (Contribution gateway placeholder) */}
         {currentStep === 'payment' && selectedLevel && (
           <div className="max-w-md mx-auto bg-white rounded-3xl shadow-sm border border-gray-100 p-8 text-center space-y-6">
             <div>
@@ -619,6 +656,12 @@ export default function JoinTheMission() {
               <p className="text-sm text-gray-600 font-devanagari leading-relaxed">
                 आपका आवेदन सफलतापूर्वक प्राप्त हो गया है। Verification के बाद आपकी Membership / Volunteer Registration सक्रिय की जाएगी। आपको Confirmation SMS / Email / WhatsApp के माध्यम से सूचना दी जाएगी।
               </p>
+              {createdMembershipId && (
+                <div className="mt-4 p-3 bg-gray-50 border border-gray-150 rounded-2xl inline-block text-center">
+                  <span className="text-[10px] text-gray-400 font-extrabold uppercase tracking-widest block mb-0.5">Application Ref ID</span>
+                  <span className="font-mono text-sm text-charcoal font-bold">{createdMembershipId}</span>
+                </div>
+              )}
             </div>
 
             {/* ID Card Generator Preview */}

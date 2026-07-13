@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const memberSchema = new mongoose.Schema({
+const membershipSchema = new mongoose.Schema({
   memberId: { type: String, unique: true },  // SDMKF-MH-000125 format, auto-generated
   fullName: { type: String, required: true },
   mobile: { type: String, required: true },
@@ -26,4 +26,4 @@ const memberSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Member', memberSchema);
+module.exports = mongoose.model('Membership', membershipSchema);

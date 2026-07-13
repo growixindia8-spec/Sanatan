@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const otpSchema = new mongoose.Schema({
+const otpSessionSchema = new mongoose.Schema({
   mobile: { type: String, required: true },
   otpHash: { type: String, required: true },             // hashed OTP, never store plain
   purpose: { type: String, enum: ['register', 'login', 'reset-password'], required: true },
@@ -9,4 +9,4 @@ const otpSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Otp', otpSchema);
+module.exports = mongoose.model('OtpSession', otpSessionSchema);

@@ -44,10 +44,10 @@ const slides = [
 ];
 
 const announcements = [
-  "सांस्कृतिक जनजागरण परियोजनाओं पर कार्य जारी है",
-  "धर्म की रक्षा, संस्कृति की रक्षा और समाज सेवा — हम सबकी सामूहिक जिम्मेदारी है",
-  "आपदा राहत एवं मानव सेवा अभियान हेतु सहयोग आमंत्रित है",
-  "UPI, QR Code, Bank Transfer के माध्यम से दान करें"
+  "🚩 सांस्कृतिक जनजागरण परियोजनाओं पर कार्य जारी है",
+  "🚩 धर्म की रक्षा, संस्कृति की रक्षा और समाज सेवा — हम सबकी सामूहिक जिम्मेदारी है",
+  "🚩 आपदा राहत एवं मानव सेवा अभियान हेतु सहयोग आमंत्रित है",
+  "🚩 UPI, QR Code, Bank Transfer के माध्यम से दान करें"
 ];
 
 export default function Hero() {
@@ -70,7 +70,7 @@ export default function Hero() {
   return (
     <div className="relative w-full flex flex-col">
       {/* Hero Slider Container */}
-      <div className="relative h-[65vh] md:h-[55vh] w-full overflow-hidden bg-gray-900">
+      <div className="relative h-[69vh] md:h-[55vh] w-full overflow-hidden bg-gray-900">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide}
@@ -91,7 +91,7 @@ export default function Hero() {
             {/* Slide Content */}
             <div className="absolute bottom-16 left-0 right-0 z-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
               <div className="max-w-2xl text-left">
-                <Typewriter 
+                <Typewriter
                   headingText={translatedSlides[currentSlide].heading}
                   subtextText={translatedSlides[currentSlide].subtext}
                 />
@@ -129,7 +129,7 @@ export default function Hero() {
           ))}
         </div>
       </div>
-
+      <br />
       {/* Announcement Ticker directly below the hero */}
       <div className="bg-[#FF7518] text-white py-3 overflow-hidden flex whitespace-nowrap z-20 border-t border-orange-400 select-none shadow-md">
         <div className="flex w-full overflow-hidden relative">
@@ -144,7 +144,7 @@ export default function Hero() {
             {[...announcements, ...announcements, ...announcements].map((msg, index) => (
               <span key={index} className="inline-flex items-center font-devanagari text-sm font-semibold tracking-wide pr-4">
                 {msg}
-                <span className="text-white text-xs ml-8 inline-block transform scale-110">▶</span>
+                <p className="text-white text-xs ml-3 inline-block transform scale-110"></p>
               </span>
             ))}
           </motion.div>

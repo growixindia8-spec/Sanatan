@@ -13,6 +13,7 @@ import FinalCTA from '../components/FinalCTA';
 import Newsletter from '../components/Newsletter';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
+import { api } from '../lib/apiClient';
 
 export default function About() {
   const { hash } = useLocation();
@@ -156,23 +157,33 @@ export default function About() {
     setIsOtpModalOpen(true);
   };
 
-  const handleSendOtp = (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     if (!phoneNumber || phoneNumber.length < 10) {
       setAuthError('कृपया सही 10-अंकीय मोबाइल नंबर दर्ज करें।');
       return;
     }
     setAuthError('');
-    setOtpSent(true);
+    try {
+      await api.sendOtp(phoneNumber, 'certificate-verification');
+      setOtpSent(true);
+    } catch (err) {
+      setAuthError(err.message || 'OTP भेजने में त्रुटि। कृपया पुनः प्रयास करें।');
+    }
   };
 
-  const handleVerifyOtp = (e) => {
+  const handleVerifyOtp = async (e) => {
     e.preventDefault();
-    if (otpCode === '1234' || otpCode.length >= 4) {
-      setOtpVerified(true);
-      setAuthError('');
-    } else {
-      setAuthError('गलत OTP! कृपया (1234) दर्ज करें या 4 अंकों का कोई भी नंबर डालें।');
+    setAuthError('');
+    try {
+      const res = await api.verifyOtp(phoneNumber, otpCode, 'certificate-verification');
+      if (res.success) {
+        setOtpVerified(true);
+      } else {
+        setAuthError(res.message || 'गलत OTP।');
+      }
+    } catch (err) {
+      setAuthError(err.message || 'गलत OTP! (Test Mode में सही OTP: 123456 है)');
     }
   };
 
@@ -1281,18 +1292,18 @@ export default function About() {
                       /* Step 2: Input OTP */
                       <form onSubmit={handleVerifyOtp} className="space-y-4">
                         <div>
-                          <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Enter 4-Digit OTP Code</label>
+                          <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Enter 6-Digit OTP Code</label>
                           <input
                             type="text"
-                            maxLength={4}
+                            maxLength={6}
                             value={otpCode}
                             onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
-                            placeholder="1234"
+                            placeholder="123456"
                             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-center text-lg font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-saffron"
                             required
                           />
                           <p className="text-[10px] text-gray-400 mt-2 text-center">
-                            * Enter test code <strong className="text-saffron">1234</strong> to proceed.
+                            * Enter test code <strong className="text-saffron">123456</strong> to proceed.
                           </p>
                         </div>
 

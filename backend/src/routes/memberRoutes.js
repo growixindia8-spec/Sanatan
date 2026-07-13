@@ -21,6 +21,10 @@ router.post(
 
 router.get('/verify/:memberId', memberController.verifyPublicMember);
 
+// User-facing applications and mock payment routes
+router.get('/my-applications', protect, memberController.getMyApplications);
+router.patch('/:id/mark-paid-test', memberController.markPaidTest);
+
 // Coordinator/Admin routes
 router.patch('/:id/approve', protect, authorize('admin'), memberController.approveMember);
 router.patch('/:id/reject', protect, authorize('admin'), memberController.rejectMember);

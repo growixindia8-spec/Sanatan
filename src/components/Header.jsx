@@ -6,6 +6,7 @@ import DonateButton from './shared/DonateButton';
 import LanguageSelector from './shared/LanguageSelector';
 import { useTranslation } from '../i18n/LanguageContext';
 import logo from '../assets/logo-sanatan.jpg';
+import { usePortalAuth } from '../context/PortalAuthContext';
 
 const translationKeys = {
   'HOME': 'nav.home',
@@ -51,6 +52,8 @@ export default function Header() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileExpandedMenu, setMobileExpandedMenu] = useState(null);
   const { t } = useTranslation();
+  const { user, isAuthenticated, logout } = usePortalAuth();
+  const portalUrl = import.meta.env.VITE_PORTAL_URL || 'http://localhost:5174';
 
   const getTranslatedName = (name) => {
     const key = translationKeys[name];
@@ -87,11 +90,12 @@ export default function Header() {
     },
     {
       name: 'PORTAL',
-      items: [
-        { name: 'Login / Register', path: '/portal' },
-        { name: 'My Profile', path: '/portal' },
-        { name: 'Verification Portal', path: '/portal' },
-        { name: 'Announcements', path: '/portal' }
+      items: isAuthenticated ? [
+        { name: `Hello, ${user?.fullName || 'User'}`, path: portalUrl },
+        { name: 'My Profile', path: portalUrl },
+        { name: 'Sign Out', path: '#', action: 'logout' }
+      ] : [
+        { name: 'Login / Register', path: portalUrl }
       ]
     },
     {
@@ -186,7 +190,13 @@ export default function Header() {
                             <a
                               key={subItem.name}
                               href={subItem.path}
-                              className="block px-4 py-2.5 text-sm text-charcoal hover:bg-cream hover:text-saffron transition-colors font-medium"
+                              onClick={(e) => {
+                                if (subItem.action === 'logout') {
+                                  e.preventDefault();
+                                  logout();
+                                }
+                              }}
+                              className="block px-4 py-2.5 text-sm text-[#FF6A00] font-bold hover:bg-cream transition-colors"
                             >
                               {getTranslatedName(subItem.name)}
                             </a>
@@ -291,8 +301,14 @@ export default function Header() {
                               <a
                                 key={subItem.name}
                                 href={subItem.path}
-                                onClick={() => setIsOpen(false)}
-                                className="block py-2 text-sm text-gray-600 hover:text-saffron font-medium"
+                                onClick={(e) => {
+                                  if (subItem.action === 'logout') {
+                                    e.preventDefault();
+                                    logout();
+                                  }
+                                  setIsOpen(false);
+                                }}
+                                className="block py-2 text-sm text-red-500 font-bold"
                               >
                                 {getTranslatedName(subItem.name)}
                               </a>

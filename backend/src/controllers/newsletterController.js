@@ -1,4 +1,4 @@
-const NewsletterSubscriber = require('../models/NewsletterSubscriber');
+const Newsletter = require('../models/Newsletter');
 const { sendEmail } = require('../utils/sendEmail');
 
 exports.subscribeNewsletter = async (req, res, next) => {
@@ -10,12 +10,12 @@ exports.subscribeNewsletter = async (req, res, next) => {
 
   try {
     // Duplicate check
-    const existing = await NewsletterSubscriber.findOne({ email });
+    const existing = await Newsletter.findOne({ email });
     if (existing) {
       return res.status(400).json({ success: false, message: 'This email is already subscribed' });
     }
 
-    await NewsletterSubscriber.create({ email });
+    await Newsletter.create({ email });
 
     // Send Welcome Email
     await sendEmail({
