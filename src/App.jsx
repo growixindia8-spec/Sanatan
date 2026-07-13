@@ -20,6 +20,7 @@ import SplashScreen from './components/shared/SplashScreen';
 import ChatbotWidget from './components/shared/ChatbotWidget';
 import JoinTheMission from './pages/JoinTheMission';
 import { PortalAuthProvider } from './context/PortalAuthContext';
+import Admin from './pages/Admin';
 function App() {
   return (
     <>
@@ -27,6 +28,7 @@ function App() {
       <PortalAuthProvider>
         <Router>
           <Routes>
+            <Route path="/admin" element={<Admin />} />
             <Route path="/join-the-mission" element={<JoinTheMission />} />
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
