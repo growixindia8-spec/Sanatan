@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function AmountSelector({ contributionType }) {
+export default function AmountSelector({ contributionType, onAmountChange }) {
   const [selectedAmount, setSelectedAmount] = useState(501);
   const [customAmount, setCustomAmount] = useState('');
+
+  useEffect(() => {
+    const val = customAmount ? parseFloat(customAmount) : selectedAmount;
+    if (onAmountChange) {
+      onAmountChange(val || 0);
+    }
+  }, [selectedAmount, customAmount, onAmountChange]);
 
   const amounts = [
     { value: 51, label: 'शुभ' },

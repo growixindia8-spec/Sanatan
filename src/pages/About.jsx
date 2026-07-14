@@ -6,6 +6,7 @@ import {
   Mail, Phone, Shield, FileSpreadsheet, ChevronRight, X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Hamaraparichay from '../assets/about1.jpg';
 
 // Import Reusable Components
 import Header from '../components/Header';
@@ -146,6 +147,7 @@ export default function About() {
   const [otpCode, setOtpCode] = useState('');
   const [otpVerified, setOtpVerified] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [serverTestOtp, setServerTestOtp] = useState('');
 
   const openCertModal = (cert) => {
     setSelectedCert(cert);
@@ -154,6 +156,7 @@ export default function About() {
     setOtpCode('');
     setOtpVerified(false);
     setAuthError('');
+    setServerTestOtp('');
     setIsOtpModalOpen(true);
   };
 
@@ -165,8 +168,13 @@ export default function About() {
     }
     setAuthError('');
     try {
-      await api.sendOtp(phoneNumber, 'certificate-verification');
+      const res = await api.sendOtp(phoneNumber, 'certificate-verification');
       setOtpSent(true);
+      if (res.testOtp) {
+        setServerTestOtp(res.testOtp);
+      } else {
+        setServerTestOtp('');
+      }
     } catch (err) {
       setAuthError(err.message || 'OTP भेजने में त्रुटि। कृपया पुनः प्रयास करें।');
     }
@@ -183,7 +191,7 @@ export default function About() {
         setAuthError(res.message || 'गलत OTP।');
       }
     } catch (err) {
-      setAuthError(err.message || 'गलत OTP! (Test Mode में सही OTP: 123456 है)');
+      setAuthError(err.message || 'गलत OTP!');
     }
   };
 
@@ -313,7 +321,7 @@ export default function About() {
                 {/* Visual Image */}
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border-4 border-double border-saffron/40">
                   <img
-                    src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=800"
+                    src={Hamaraparichay}
                     alt="Sanatan Seva Foundation Activity"
                     className="w-full h-full object-cover"
                   />
@@ -947,7 +955,7 @@ export default function About() {
                   <option className="hover:bg-orange-50" value="2024-25">FY 2024-25</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                 </div>
               </div>
             </div>
@@ -1033,7 +1041,7 @@ export default function About() {
                   <option className="hover:bg-orange-50" value="2024-25">2024-25</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                 </div>
               </div>
             </div>
@@ -1302,9 +1310,15 @@ export default function About() {
                             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-center text-lg font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-saffron"
                             required
                           />
-                          <p className="text-[10px] text-gray-400 mt-2 text-center">
-                            * Enter test code <strong className="text-saffron">123456</strong> to proceed.
-                          </p>
+                          {!import.meta.env.PROD && serverTestOtp ? (
+                            <div className="bg-orange-50 border border-orange-200 text-orange-900 px-4 py-2 rounded-lg text-center text-xs font-bold font-mono my-2">
+                              🔧 Test Mode OTP: {serverTestOtp}
+                            </div>
+                          ) : (
+                            <p className="text-[10px] text-gray-400 mt-2 text-center">
+                              * Enter the verification OTP code sent to your phone.
+                            </p>
+                          )}
                         </div>
 
                         {authError && (

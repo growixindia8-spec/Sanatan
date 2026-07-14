@@ -1,4 +1,6 @@
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") ||
+  "http://localhost:5000";
 
 async function request(endpoint, options = {}) {
   const token = localStorage.getItem("portal_token");
@@ -7,8 +9,22 @@ async function request(endpoint, options = {}) {
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
   };
-  const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
-  const data = await res.json();
+  
+  let res;
+  try {
+    res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
+  } catch (netErr) {
+    console.error("Network connection error in apiClient:", netErr);
+    throw new Error("Backend server is not running on port 5000.");
+  }
+  
+  let data;
+  try {
+    data = await res.json();
+  } catch (parseErr) {
+    throw new Error(`Server returned invalid response (Status ${res.status}).`);
+  }
+
   if (!res.ok) throw new Error(data.message || "Something went wrong");
   return data;
 }
@@ -18,8 +34,15 @@ export const api = {
     request("/api/auth/login", { method: "POST", body: JSON.stringify({ mobile, password }) }),
   register: (data) =>
     request("/api/auth/register", { method: "POST", body: JSON.stringify(data) }),
-  sendOtp: (mobile, purpose) =>
-    request("/api/auth/send-otp", { method: "POST", body: JSON.stringify({ mobile, purpose }) }),
+  sendOtp: (mobile, purpose, deliveryMethod = "sms") =>
+    request("/api/auth/send-otp", {
+      method: "POST",
+      body: JSON.stringify({
+        mobile,
+        purpose,
+        deliveryMethod
+      })
+    }),
   verifyOtp: (mobile, otp, purpose) =>
     request("/api/auth/verify-otp", { method: "POST", body: JSON.stringify({ mobile, otp, purpose }) }),
   resetPassword: (mobile, otp, newPassword) =>
@@ -47,4 +70,14 @@ export const api = {
     request("/api/portal/financial-reports", { method: "POST", body: formData }),
   getFinancialReports: (fiscalYear) =>
     request(`/api/portal/financial-reports${fiscalYear ? `?fiscalYear=${fiscalYear}` : ""}`),
+
+  // Festivals API
+  getFestivals: (month) => request(`/api/festivals${month ? `?month=${month}` : ""}`),
+  getUpcomingFestivals: () => request("/api/festivals/upcoming"),
+  getHomeFestivals: () => request("/api/festivals/home"),
+  adminGetFestivals: () => request("/api/admin/festivals"),
+  adminCreateFestival: (data) => request("/api/admin/festivals", { method: "POST", body: JSON.stringify(data) }),
+  adminUpdateFestival: (id, data) => request(`/api/admin/festivals/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  adminDeleteFestival: (id) => request(`/api/admin/festivals/${id}`, { method: "DELETE" }),
+  adminPatchFestivalStatus: (id, status) => request(`/api/admin/festivals/${id}/status`, { method: "PATCH", body: JSON.stringify({ status }) }),
 };

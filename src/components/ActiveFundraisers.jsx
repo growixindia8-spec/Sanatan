@@ -1,6 +1,7 @@
 import React from 'react';
 import { campaigns } from '../data/fundraisers';
 import FundraiserCard from './donate/FundraiserCard';
+import { Link } from 'react-router-dom';
 
 export default function ActiveFundraisers() {
   return (
@@ -11,7 +12,7 @@ export default function ActiveFundraisers() {
             <h2 className="text-3xl font-bold font-devanagari text-maroon mb-2">सत्यापित अभियान, असाधारण प्रभाव</h2>
             <p className="text-gray-600 font-medium">Active Fundraisers</p>
           </div>
-          <a href="/donate/view-fundraisers" className="text-saffron font-bold hover:underline hidden md:block">View All Fundraisers &rarr;</a>
+          <Link to="/donate/view-fundraisers" className="text-saffron font-bold hover:underline hidden md:block">View All Fundraisers &rarr;</Link>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -20,9 +21,10 @@ export default function ActiveFundraisers() {
           ))}
         </div>
         <div className="mt-8 text-center md:hidden">
-          <a href="/donate/view-fundraisers" className="text-saffron font-bold hover:underline">View All Fundraisers &rarr;</a>
+          <Link to="/donate/view-fundraisers" className="text-saffron font-bold hover:underline">View All Fundraisers &rarr;</Link>
         </div>
       </div>
     </section>
   );
 }
+

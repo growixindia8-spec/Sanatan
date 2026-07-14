@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function LongTermCommitment() {
   return (
@@ -30,13 +31,13 @@ export default function LongTermCommitment() {
 
           {/* Link */}
           <div className="flex justify-center">
-            <a 
-              href="#" 
+            <Link 
+              to="/about" 
               className="text-[#FF6B00] hover:text-orange-600 transition-colors font-bold text-sm flex items-center gap-1.5 hover:scale-105 transform duration-300"
             >
               <span>Know More</span>
               <ChevronDown size={16} />
-            </a>
+            </Link>
           </div>
 
         </div>
@@ -45,3 +46,4 @@ export default function LongTermCommitment() {
     </section>
   );
 }
+

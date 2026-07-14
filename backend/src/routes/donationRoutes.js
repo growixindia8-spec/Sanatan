@@ -5,8 +5,11 @@ const upload = require('../middleware/uploadMiddleware');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
 router.post('/bank-transfer', upload.single('paymentScreenshot'), donationController.bankTransfer);
+router.post('/create-order', donationController.createRazorpayOrder);
+router.post('/verify-payment', donationController.verifyRazorpayPayment);
 router.post('/razorpay/create-order', donationController.createRazorpayOrder);
 router.post('/razorpay/verify-payment', donationController.verifyRazorpayPayment);
+router.get('/verify-transaction', donationController.verifyTransaction);
 
 // Admin only routes
 router.get('/:id', protect, authorize('admin'), donationController.getDonationById);

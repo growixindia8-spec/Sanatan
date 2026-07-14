@@ -1,128 +1,140 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Building2, Award, HeartHandshake, FileCheck2, ArrowRight } from 'lucide-react';
 
 export default function CsrPartnerships() {
+  const benefits = [
+    {
+      icon: Award,
+      title: "80G Tax Exemption",
+      desc: "All corporate contributions are eligible for 50% tax deduction benefits under Section 80G.",
+      titleHi: "80G आयकर छूट"
+    },
+    {
+      icon: HeartHandshake,
+      title: "Direct Social Impact",
+      desc: "Directly fund verified initiatives in rural education, medical support, gaushalas, and disaster relief.",
+      titleHi: "प्रत्यक्ष सामाजिक प्रभाव"
+    },
+    {
+      icon: FileCheck2,
+      title: "100% Transparency",
+      desc: "Receive audited financial records, completion certificates, and real-time field reports for every project.",
+      titleHi: "पूर्ण पारदर्शिता"
+    }
+  ];
+
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 text-center">
-        <h2 className="text-3xl font-bold font-devanagari text-maroon mb-2">CSR & Partnerships</h2>
-        <p className="text-gray-600 mb-10">साझेदारी से सेवा, सहयोग से परिवर्तन</p>
+    <section className="py-24 bg-gradient-to-br from-amber-50/50 via-white to-orange-50/30 border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="bg-charcoal text-white rounded-2xl p-8 md:p-12 mb-16 shadow-xl">
-          <h3 className="text-2xl font-bold mb-4">Become a CSR Partner</h3>
-          <p className="text-gray-300 max-w-2xl mx-auto mb-8">From rural education to gaushala infrastructure — co-design and co-brand programs aligned to your CSR mandate.</p>
-          <button className="bg-saffron text-white px-8 py-3 rounded-full font-bold hover:bg-orange-600 transition-colors shadow-lg">Download CSR Profile</button>
-        </div>
-
-        <div className="max-w-4xl mx-auto bg-white rounded-2xl p-8 md:p-12 shadow-lg border border-gray-100 mb-16 text-left relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#FF9933] to-[#FF6A00]"></div>
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 bg-[#FF6A00]/10 border border-[#FF6A00]/20 px-4 py-1.5 rounded-full text-[#FF6A00] font-bold text-xs uppercase tracking-widest mb-4">
+            <Building2 size={14} />
+            <span>Corporate Social Responsibility</span>
+          </div>
           
-          <div className="text-center mb-10">
-            <span className="text-xs font-bold text-saffron uppercase tracking-widest mb-2 block">Partnership Inquiry</span>
-            <h3 className="text-3xl font-bold text-charcoal">CSR Contact Form</h3>
-            <p className="text-gray-500 mt-2">Fill in your corporate details to discuss CSR funding opportunities.</p>
-          </div>
-
-          <form className="space-y-10">
-            {/* 01 Company Details */}
-            <div>
-              <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-3">
-                <span className="w-8 h-8 rounded-full bg-orange-100 text-saffron font-bold flex items-center justify-center text-sm">01</span>
-                <h4 className="text-xl font-bold text-charcoal">Company Details</h4>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-bold text-charcoal mb-2">Company Name <span className="text-saffron">*</span></label>
-                  <input type="text" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-charcoal font-medium focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-all hover:border-saffron shadow-sm" placeholder="Enter company name" />
-                </div>
-                <div className="relative">
-                  <label className="block text-sm font-bold text-charcoal mb-2">Industry Type <span className="text-saffron">*</span></label>
-                  <select className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-charcoal font-medium focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-all hover:border-saffron shadow-sm cursor-pointer appearance-none">
-                    <option className="hover:bg-orange-50" value="">Select Industry</option>
-                    <option className="hover:bg-orange-50" value="IT">IT & Technology</option>
-                    <option className="hover:bg-orange-50" value="Finance">Banking & Finance</option>
-                    <option className="hover:bg-orange-50" value="Manufacturing">Manufacturing</option>
-                    <option className="hover:bg-orange-50" value="Healthcare">Healthcare</option>
-                    <option className="hover:bg-orange-50" value="Other">Other</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-7 text-gray-500">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 02 Contact Person */}
-            <div>
-              <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-3">
-                <span className="w-8 h-8 rounded-full bg-orange-100 text-saffron font-bold flex items-center justify-center text-sm">02</span>
-                <h4 className="text-xl font-bold text-charcoal">Contact Person</h4>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-bold text-charcoal mb-2">Full Name <span className="text-saffron">*</span></label>
-                  <input type="text" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-charcoal font-medium focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-all hover:border-saffron shadow-sm" placeholder="Your name" />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-charcoal mb-2">Designation</label>
-                  <input type="text" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-charcoal font-medium focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-all hover:border-saffron shadow-sm" placeholder="Your designation" />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-charcoal mb-2">Official Email <span className="text-saffron">*</span></label>
-                  <input type="email" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-charcoal font-medium focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-all hover:border-saffron shadow-sm" placeholder="email@company.com" />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-charcoal mb-2">Phone Number <span className="text-saffron">*</span></label>
-                  <input type="tel" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-charcoal font-medium focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-all hover:border-saffron shadow-sm" placeholder="Your contact number" />
-                </div>
-              </div>
-            </div>
-
-            {/* 03 CSR Requirements */}
-            <div>
-              <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-3">
-                <span className="w-8 h-8 rounded-full bg-orange-100 text-saffron font-bold flex items-center justify-center text-sm">03</span>
-                <h4 className="text-xl font-bold text-charcoal">CSR Requirements</h4>
-              </div>
-              
-              <div className="grid grid-cols-1 gap-6">
-                <div className="relative">
-                  <label className="block text-sm font-bold text-charcoal mb-2">CSR Interest / Funding Category <span className="text-saffron">*</span></label>
-                  <select className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-charcoal font-medium focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-all hover:border-saffron shadow-sm cursor-pointer appearance-none">
-                    <option className="hover:bg-orange-50" value="">Select Category</option>
-                    <option className="hover:bg-orange-50" value="education">Education & Skill Development</option>
-                    <option className="hover:bg-orange-50" value="healthcare">Healthcare & Medical</option>
-                    <option className="hover:bg-orange-50" value="environment">Environment & Sustainability</option>
-                    <option className="hover:bg-orange-50" value="animal">Animal Welfare (Gau Seva)</option>
-                    <option className="hover:bg-orange-50" value="other">Other Initiative</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pt-7 text-gray-500">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-charcoal mb-2">Additional Details</label>
-                  <textarea rows="4" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-charcoal font-medium focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-all hover:border-saffron shadow-sm" placeholder="Tell us more about your CSR objectives..."></textarea>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 text-center">
-              <button type="button" className="bg-[#FF6A00] text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition-all hover:scale-105 shadow-md shadow-orange-500/20 active:scale-95">Request a Call Back</button>
-            </div>
-          </form>
+          <h2 className="text-3xl md:text-5xl font-bold text-charcoal mb-4 font-devanagari tracking-tight">
+            CSR & Partnerships
+          </h2>
+          
+          <p className="text-saffron font-bold text-base md:text-lg font-devanagari mb-4">
+            साझेदारी से सेवा, सहयोग से परिवर्तन
+          </p>
+          
+          <p className="text-sm md:text-base text-gray-500 leading-relaxed font-devanagari max-w-2xl mx-auto">
+            सनातन धर्म मानव कल्याण फाउंडेशन विभिन्न सामाजिक, शैक्षिक, स्वास्थ्य और सांस्कृतिक परियोजनाओं के लिए कॉरपोरेट सामाजिक उत्तरदायित्व (CSR) भागीदारी का स्वागत करता है।
+          </p>
         </div>
-        
-        <div>
-          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Our CSR Outreach Partners</p>
-          <div className="flex space-x-12 justify-center overflow-hidden opacity-50">
-            <div className="w-32 h-12 bg-gray-200 rounded"></div>
-            <div className="w-32 h-12 bg-gray-200 rounded"></div>
-            <div className="w-32 h-12 bg-gray-200 rounded"></div>
-            <div className="w-32 h-12 bg-gray-200 rounded"></div>
+
+        {/* Feature Box Card */}
+        <div className="bg-[#1A1A1A] rounded-3xl shadow-2xl overflow-hidden relative border border-neutral-800 p-8 md:p-14 mb-16">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF6A00]/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="grid lg:grid-cols-12 gap-12 items-center relative z-10">
+            {/* Left Box */}
+            <div className="lg:col-span-5 space-y-6 text-left">
+              <span className="text-[10px] font-black text-[#E5AD23] tracking-widest uppercase block">
+                COLLABORATE WITH US
+              </span>
+              
+              <h3 className="text-3xl font-extrabold text-white leading-tight font-devanagari">
+                Become a CSR Partner<br/>
+                <span className="text-[#FF6A00] font-bold text-xl md:text-2xl mt-2 block font-devanagari">
+                  एक सशक्त साझेदारी की ओर
+                </span>
+              </h3>
+              
+              <p className="text-[#E5DFDA] text-sm leading-relaxed font-devanagari">
+                ग्रामीण शिक्षा से लेकर गौशाला विकास तक — अपनी CSR प्राथमिकताओं के अनुसार हमारी विभिन्न जनकल्याणकारी योजनाओं को प्रायोजित करें। हम पूर्ण अनुपालन रिपोर्ट और ऑडिट क्रेडेंशियल प्रदान करते हैं।
+              </p>
+
+              <div className="pt-4 flex flex-col sm:flex-row gap-4">
+                <Link 
+                  to="/partners/csr"
+                  className="bg-[#FF6A00] text-white py-3.5 px-8 rounded-xl font-bold hover:bg-orange-600 transition-all hover:scale-[1.02] shadow-md shadow-orange-500/20 active:scale-95 text-xs text-center flex items-center justify-center gap-2 tracking-wider uppercase font-sans cursor-pointer"
+                >
+                  <span>Partner With Us</span>
+                  <ArrowRight size={14} />
+                </Link>
+                
+                <button
+                  type="button"
+                  className="bg-transparent border border-neutral-700 text-neutral-300 py-3.5 px-8 rounded-xl font-bold hover:bg-neutral-800 hover:text-white transition-all text-xs text-center tracking-wider uppercase font-sans cursor-pointer"
+                >
+                  Download Profile
+                </button>
+              </div>
+            </div>
+
+            {/* Right Box (Benefits Grid) */}
+            <div className="lg:col-span-7 grid sm:grid-cols-3 gap-6">
+              {benefits.map((benefit, idx) => {
+                const IconComp = benefit.icon;
+                return (
+                  <motion.div
+                    key={idx}
+                    whileHover={{ y: -5 }}
+                    className="bg-white/5 border border-white/10 rounded-2xl p-5 text-left flex flex-col justify-between h-full"
+                  >
+                    <div>
+                      <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-[#E5AD23] mb-4">
+                        <IconComp size={20} />
+                      </div>
+                      <h4 className="text-white font-bold text-sm mb-1 leading-snug font-sans">
+                        {benefit.title}
+                      </h4>
+                      <span className="text-yellow-500/80 font-bold text-[10px] tracking-wider font-devanagari block mb-3">
+                        {benefit.titleHi}
+                      </span>
+                    </div>
+                    <p className="text-neutral-400 text-[11px] leading-relaxed">
+                      {benefit.desc}
+                    </p>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
+
+        {/* Outreach Partners Title Strip */}
+        <div className="text-center">
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.25em] mb-8 font-sans">
+            Our CSR Outreach Partners & Supports
+          </p>
+          
+          <div className="flex flex-wrap gap-8 justify-center items-center opacity-40 grayscale">
+            <div className="w-28 h-10 bg-gray-200 rounded-lg flex items-center justify-center font-bold text-xs text-neutral-500 tracking-wider">CORP-01</div>
+            <div className="w-28 h-10 bg-gray-200 rounded-lg flex items-center justify-center font-bold text-xs text-neutral-500 tracking-wider">CORP-02</div>
+            <div className="w-28 h-10 bg-gray-200 rounded-lg flex items-center justify-center font-bold text-xs text-neutral-500 tracking-wider">CORP-03</div>
+            <div className="w-28 h-10 bg-gray-200 rounded-lg flex items-center justify-center font-bold text-xs text-neutral-500 tracking-wider">CORP-04</div>
+          </div>
+        </div>
+
       </div>
     </section>
   );

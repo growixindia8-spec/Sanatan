@@ -18,6 +18,8 @@ const complaintRoutes = require('./src/routes/complaintRoutes');
 const csrRoutes = require('./src/routes/csrRoutes');
 const contactRoutes = require('./src/routes/contactRoutes');
 const newsletterRoutes = require('./src/routes/newsletterRoutes');
+const festivalRoutes = require('./src/routes/festivalRoutes');
+const adminFestivalRoutes = require('./src/routes/adminFestivalRoutes');
 
 // Initialize express app
 const app = express();
@@ -29,15 +31,48 @@ connectDB();
 app.use(helmet());
 
 // CORS setup
+const allowedOrigins = [];
+if (process.env.NODE_ENV !== 'production') {
+  allowedOrigins.push("http://localhost:5173");
+  allowedOrigins.push("http://localhost:5174");
+}
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+if (process.env.PORTAL_URL) {
+  allowedOrigins.push(process.env.PORTAL_URL);
+}
+
+// Clean up origins
+const uniqueOrigins = [...new Set(allowedOrigins.filter(Boolean))];
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true
+  origin(origin, callback) {
+    if (!origin || uniqueOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked origin: ${origin}`));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 };
+
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
+
+// Health check endpoint (placed before rate limiter to avoid blocks)
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: "ok",
+    message: "Backend is running"
+  });
+});
 
 // Apply rate limiter to general api calls
 app.use('/api/', apiLimiter);
@@ -45,6 +80,7 @@ app.use('/api/', apiLimiter);
 // Map API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/donation', donationRoutes);
+app.use('/api/donations', donationRoutes);
 app.use('/api/member', memberRoutes);
 app.use('/api/membership', memberRoutes);
 app.use('/api/fundraiser', fundraiserRoutes);
@@ -54,15 +90,12 @@ app.use('/api/complaint', complaintRoutes);
 app.use('/api/csr', csrRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/newsletter', newsletterRoutes);
+app.use('/api/festivals', festivalRoutes);
+app.use('/api/admin/festivals', adminFestivalRoutes);
 
 // Base route check
 app.get('/', (req, res) => {
   res.status(200).json({ success: true, message: 'Sanatan Dharm Foundation API Server is fully operational' });
-});
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
 });
 
 // Global Error Handler

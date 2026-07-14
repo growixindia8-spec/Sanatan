@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, Calendar, Heart, ShieldAlert } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowLeft, ChevronLeft, ChevronRight, Calendar, Heart, ShieldAlert, Loader } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
 
 // Import Reusable Components
 import Header from '../../components/Header';
@@ -9,43 +9,132 @@ import FinalCTA from '../../components/FinalCTA';
 import Newsletter from '../../components/Newsletter';
 import Footer from '../../components/Footer';
 import WhatsAppButton from '../../components/WhatsAppButton';
-import DonateButton from '../../components/shared/DonateButton';
 
-// Import Static Data
+// Import Static Data for Offline Fallback
 import { festivalsData } from '../../data/festivals';
+import { api } from '../../lib/apiClient';
 
 export default function FestivalSevaCalendar() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  
   const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    { name: "January", val: "01" },
+    { name: "February", val: "02" },
+    { name: "March", val: "03" },
+    { name: "April", val: "04" },
+    { name: "May", val: "05" },
+    { name: "June", val: "06" },
+    { name: "July", val: "07" },
+    { name: "August", val: "08" },
+    { name: "September", val: "09" },
+    { name: "October", val: "10" },
+    { name: "November", val: "11" },
+    { name: "December", val: "12" }
   ];
 
-  // Set default month to current month (e.g. July)
-  const defaultMonth = months[new Date().getMonth()];
-  const [selectedMonth, setSelectedMonth] = useState(defaultMonth);
+  // Helper to format today as YYYY-MM (e.g. 2027-07)
+  // Let's use 2027 as default year if we want to align with the static data year, or current year.
+  // The static data has dates in 2027, let's use 2027 as standard default.
+  const getInitialMonthStr = () => {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    // If we're in 2026, default to 2027 to show static data fallback, or match current year.
+    const year = currentYear < 2027 ? 2027 : currentYear;
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
+  };
 
-  // Filter festivals based on selected month
-  const filteredFestivals = festivalsData.filter(
-    (f) => f.month.toLowerCase() === selectedMonth.toLowerCase()
-  );
+  const monthParam = searchParams.get('month') || getInitialMonthStr();
+  const [yearStr, monthStr] = monthParam.split('-');
+  const selectedYear = parseInt(yearStr, 10) || 2027;
+  const selectedMonthVal = monthStr || "07";
+
+  const [festivals, setFestivals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isOfflineFallback, setIsOfflineFallback] = useState(false);
+
+  // Sync and fetch from backend
+  useEffect(() => {
+    const loadFestivals = async () => {
+      try {
+        setLoading(true);
+        setIsOfflineFallback(false);
+        const data = await api.getFestivals(monthParam);
+        
+        // If backend returns data, use it. If not, fallback to static data
+        if (data.success && data.data && data.data.length > 0) {
+          setFestivals(data.data);
+        } else {
+          // Empty state from DB or unreachable, use offline fallback filtering
+          useStaticFallback();
+        }
+      } catch (err) {
+        console.warn("Backend unavailable, using static fallback:", err.message);
+        useStaticFallback();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const useStaticFallback = () => {
+      // Find month name matching the selectedMonthVal
+      const monthObj = months.find(m => m.val === selectedMonthVal);
+      const monthName = monthObj ? monthObj.name : "July";
+      
+      const filtered = festivalsData.filter(
+        (f) => f.month.toLowerCase() === monthName.toLowerCase()
+      );
+      
+      // Map static data format to look like model records
+      const mapped = filtered.map((f, idx) => ({
+        _id: `static_${idx}`,
+        festivalName: f.name,
+        festivalDate: new Date(`${f.date}`),
+        associatedMission: f.mission,
+        status: f.status.toLowerCase(),
+        donationLink: f.donationLink
+      }));
+      
+      setFestivals(mapped);
+      setIsOfflineFallback(true);
+    };
+
+    loadFestivals();
+  }, [monthParam, selectedMonthVal]);
 
   // Month navigation handlers
   const handlePrevMonth = () => {
-    const currentIdx = months.indexOf(selectedMonth);
-    const prevIdx = (currentIdx - 1 + 12) % 12;
-    setSelectedMonth(months[prevIdx]);
+    let m = parseInt(selectedMonthVal, 10) - 1;
+    let y = selectedYear;
+    if (m < 1) {
+      m = 12;
+      y -= 1;
+    }
+    const formattedMonth = String(m).padStart(2, '0');
+    setSearchParams({ month: `${y}-${formattedMonth}` });
   };
 
   const handleNextMonth = () => {
-    const currentIdx = months.indexOf(selectedMonth);
-    const nextIdx = (currentIdx + 1) % 12;
-    setSelectedMonth(months[nextIdx]);
+    let m = parseInt(selectedMonthVal, 10) + 1;
+    let y = selectedYear;
+    if (m > 12) {
+      m = 1;
+      y += 1;
+    }
+    const formattedMonth = String(m).padStart(2, '0');
+    setSearchParams({ month: `${y}-${formattedMonth}` });
+  };
+
+  const handleMonthSelect = (val) => {
+    setSearchParams({ month: `${selectedYear}-${val}` });
+  };
+
+  const handleYearSelect = (val) => {
+    setSearchParams({ month: `${val}-${selectedMonthVal}` });
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-cream text-charcoal font-sans antialiased">
-      
-      {/* Navigation Header */}
       <Header />
 
       {/* Hero Header */}
@@ -82,13 +171,13 @@ export default function FestivalSevaCalendar() {
       <section className="py-16 bg-cream">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           
-          {/* Section 1 — Month Navigation Bar */}
+          {/* Month & Year Navigation Bar */}
           <div className="bg-white rounded-2xl p-6 shadow-md border border-saffron/10 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
             
             {/* Previous button */}
             <button 
               onClick={handlePrevMonth}
-              className="w-full sm:w-auto px-4 py-2 border border-gray-255 bg-gray-50 hover:bg-gray-100 text-charcoal rounded-full font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95"
+              className="w-full sm:w-auto px-5 py-2.5 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-charcoal rounded-full font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
             >
               <ChevronLeft size={16} />
               <span>Previous Month</span>
@@ -96,14 +185,27 @@ export default function FestivalSevaCalendar() {
 
             {/* Selection Dropdown */}
             <div className="flex items-center gap-2.5 w-full sm:w-auto justify-center">
-              <Calendar size={18} className="text-[#FF6A00]" />
+              <Calendar size={18} className="text-[#FF6A00] shrink-0" />
+              
+              {/* Month Dropdown */}
               <select 
-                value={selectedMonth} 
-                onChange={(e) => setSelectedMonth(e.target.value)}
-                className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-extrabold text-charcoal focus:outline-none focus:ring-2 focus:ring-[#FF6A00]"
+                value={selectedMonthVal} 
+                onChange={(e) => handleMonthSelect(e.target.value)}
+                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-extrabold text-charcoal focus:outline-none focus:ring-2 focus:ring-[#FF6A00] cursor-pointer"
               >
                 {months.map((m) => (
-                  <option key={m} value={m}>{m}</option>
+                  <option key={m.val} value={m.val}>{m.name}</option>
+                ))}
+              </select>
+
+              {/* Year Dropdown */}
+              <select 
+                value={selectedYear} 
+                onChange={(e) => handleYearSelect(e.target.value)}
+                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-extrabold text-charcoal focus:outline-none focus:ring-2 focus:ring-[#FF6A00] cursor-pointer"
+              >
+                {[2025, 2026, 2027, 2028, 2029].map((y) => (
+                  <option key={y} value={y}>{y}</option>
                 ))}
               </select>
             </div>
@@ -111,7 +213,7 @@ export default function FestivalSevaCalendar() {
             {/* Next button */}
             <button 
               onClick={handleNextMonth}
-              className="w-full sm:w-auto px-4 py-2 border border-gray-255 bg-gray-50 hover:bg-gray-100 text-charcoal rounded-full font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95"
+              className="w-full sm:w-auto px-5 py-2.5 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-charcoal rounded-full font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
             >
               <span>Next Month</span>
               <ChevronRight size={16} />
@@ -119,41 +221,54 @@ export default function FestivalSevaCalendar() {
 
           </div>
 
-          {/* Section 2 — Festival Cards Grid */}
-          {filteredFestivals.length > 0 ? (
+          {/* Festival Cards Grid */}
+          {loading ? (
+            <div className="bg-white rounded-2xl p-16 text-center border border-gray-100 shadow-sm mb-12">
+              <Loader size={36} className="animate-spin text-saffron mx-auto mb-3" />
+              <p className="text-xs text-gray-400">Loading campaigns and rituals...</p>
+            </div>
+          ) : festivals.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-              {filteredFestivals.map((fest, idx) => (
-                <div 
-                  key={idx} 
-                  className="bg-white rounded-xl p-6 shadow-sm border border-gray-150 hover:border-saffron/20 hover:shadow-md transition-all duration-300 flex flex-col justify-between"
-                >
-                  <div>
-                    {/* Title */}
-                    <h3 className="text-lg font-bold font-devanagari text-maroon mb-2 flex items-center gap-1.5">
-                      {fest.name}
-                    </h3>
+              {festivals.map((fest) => {
+                const donationUrl = fest.donationLink 
+                  ? fest.donationLink 
+                  : `/donate?festivalId=${fest._id}&campaign=${encodeURIComponent(fest.festivalName)}&projectFor=${encodeURIComponent(fest.associatedMission)}&sourceType=festival`;
 
-                    {/* Date */}
-                    <div className="text-xs text-gray-500 font-semibold mb-3">
-                      📅 Date: {fest.date}
+                return (
+                  <div 
+                    key={fest._id} 
+                    className="bg-white rounded-2xl p-6 shadow-sm border border-gray-150 hover:border-saffron/20 hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                  >
+                    <div>
+                      {/* Title */}
+                      <h3 className="text-lg font-bold font-devanagari text-maroon mb-2 flex items-center gap-1.5 leading-snug">
+                        {fest.festivalName}
+                      </h3>
+
+                      {/* Date */}
+                      <div className="text-xs text-gray-500 font-semibold mb-3">
+                        📅 Date: {new Date(fest.festivalDate).toLocaleDateString('hi-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      </div>
+
+                      {/* Associated Mission */}
+                      <div className="bg-[#FFF8F0] p-3 rounded-xl border-l-4 border-saffron mb-5">
+                        <p className="text-xs text-gray-600 font-devanagari leading-relaxed">
+                          <strong className="text-charcoal font-bold block mb-0.5">Associated Mission:</strong>
+                          {fest.associatedMission}
+                        </p>
+                      </div>
                     </div>
 
-                    {/* Associated Mission / Seva details */}
-                    <div className="bg-[#FFF8F0] p-3 rounded-lg border-l-4 border-saffron mb-5">
-                      <p className="text-xs text-gray-600 font-devanagari leading-relaxed">
-                        <strong className="text-charcoal font-bold block mb-0.5">Associated Mission:</strong>
-                        {fest.mission}
-                      </p>
-                    </div>
+                    {/* Donate Link */}
+                    <Link 
+                      to={donationUrl}
+                      className="w-full text-center py-2.5 bg-[#FF6A00] hover:bg-[#FF7518] text-white rounded-full font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-md shadow-orange-500/10 block"
+                    >
+                      Donate Now / दान करें
+                    </Link>
                   </div>
-
-                  {/* Donate Button */}
-                  <DonateButton 
-                    campaign={fest.name}
-                    className="w-full text-center py-2.5 bg-[#FF6A00] hover:bg-[#FF7518] text-white rounded-full font-bold text-xs uppercase tracking-wider transition-all active:scale-95 shadow-md shadow-orange-500/10 block"
-                  />
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="bg-white rounded-2xl p-12 text-center border border-gray-100 shadow-inner mb-12">
@@ -163,21 +278,15 @@ export default function FestivalSevaCalendar() {
             </div>
           )}
 
-          {/* Admin Panel requirements details in code placeholder comments */}
-          {/* 
-            ADMIN COMPONENT SPECIFICATIONS (Future Backend API Integration):
-            - Fields:
-              1. Festival Name (string, required)
-              2. Festival Date (date string, required)
-              3. Festival Month (enum / string, e.g. "January", required)
-              4. Associated Mission / Service (string / text, required)
-              5. Donation Link (string URL, optional)
-              6. Status (Active / Completed)
-            - API Methods:
-              - POST /api/festivals -> Create a new festival entry
-              - PUT /api/festivals/:id -> Update an entry
-              - DELETE /api/festivals/:id -> Remove an entry
-          */}
+          {isOfflineFallback && (
+            <div className="bg-amber-50/50 border border-dashed border-amber-200 p-4 rounded-xl text-center shadow-inner mb-6">
+              <span className="inline-flex items-center gap-1.5 text-xs text-amber-700 font-devanagari">
+                <ShieldAlert size={14} className="shrink-0" />
+                <span>संपादकीय सूचना: डेटाबेस वर्तमान में ऑफ़लाइन है। स्थिर बैकअप डेटा प्रदर्शित किया जा रहा है।</span>
+              </span>
+            </div>
+          )}
+
           <div className="bg-white/80 border border-dashed border-gray-300 p-4 rounded-xl text-center shadow-inner">
             <span className="inline-flex items-center gap-1.5 text-xs text-gray-400 font-devanagari">
               <ShieldAlert size={14} />

@@ -1,9 +1,12 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
+import activeImg from '../assets/mission_active.png';
+import waitingImg from '../assets/mission_waiting.png';
+import completedImg from '../assets/mission_completed.png';
 
 const missions = [
   {
-    image: "https://images.unsplash.com/photo-1544027760-ec32dea4b4d7?q=80&w=600",
+    image: activeImg,
     title: "Active Missions",
     dotColor: "bg-green-500",
     textColor: "text-green-600",
@@ -11,7 +14,7 @@ const missions = [
     description: "ये सत्यापित सेवा अभियान वर्तमान में सक्रिय हैं और लगातार सहयोग प्राप्त कर रहे हैं।"
   },
   {
-    image: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?q=80&w=600",
+    image: waitingImg,
     title: "Waiting for Support",
     dotColor: "bg-orange-500",
     textColor: "text-orange-600",
@@ -19,7 +22,7 @@ const missions = [
     description: "ये सत्यापित अभियान आवश्यक सहयोग की प्रतीक्षा में हैं। आपका सहयोग इन्हें आगे बढ़ाने में सहायक बनेगा।"
   },
   {
-    image: "https://images.unsplash.com/photo-1516841273335-e39b37888115?q=80&w=600",
+    image: completedImg,
     title: "Completed Missions",
     dotColor: "bg-blue-500",
     textColor: "text-blue-600",
@@ -32,17 +35,17 @@ export default function MissionStatusTabs() {
   return (
     <section className="py-20 bg-gray-50 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section Heading */}
         <div className="text-center mb-14">
           <h2 className="text-3xl md:text-4xl font-bold font-devanagari text-charcoal">
             हमारे अभियान, <span className="text-[#FF6B00]">हमारी प्रगति</span>
           </h2>
-          
+
           <span className="text-[11px] font-extrabold text-[#FF6B00] tracking-[0.2em] uppercase block mt-2.5 font-sans">
             ACTIVE, WAITING FOR SUPPORT & COMPLETED MISSIONS
           </span>
-          
+
           <p className="text-gray-500 text-sm mt-2 font-sans">
             A live, paginated view of every initiative — active, awaiting support, or completed.
           </p>
@@ -51,16 +54,16 @@ export default function MissionStatusTabs() {
         {/* Grid Cards (3 in a row) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {missions.map((m, idx) => (
-            <div 
+            <div
               key={idx}
               className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300 flex flex-col cursor-pointer group"
             >
               {/* Card Image */}
               <div className="relative aspect-video w-full overflow-hidden">
-                <img 
-                  src={m.image} 
-                  alt={m.title} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                <img
+                  src={m.image}
+                  alt={m.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               </div>
@@ -68,7 +71,7 @@ export default function MissionStatusTabs() {
               {/* Card Body */}
               <div className="p-6 flex-1 flex flex-col justify-between">
                 <div>
-                  
+
                   {/* Title Bar */}
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex items-center gap-2">

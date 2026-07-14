@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function WhoWeAre() {
   const circles = [
@@ -15,11 +16,11 @@ export default function WhoWeAre() {
     <section className="py-20 bg-[#FBF1E7]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          
+
           {/* Left Column - Graphic Poster */}
           <div className="w-full lg:w-1/2 flex justify-center">
             <div className="w-full max-w-[480px] aspect-[4/5] bg-[#5E0C09] rounded-2xl p-6 relative flex flex-col justify-between border-4 border-double border-[#FF6B00] shadow-xl overflow-hidden group">
-              
+
               {/* Decorative Border Line */}
               <div className="absolute inset-2 border border-yellow-500/30 rounded-xl pointer-events-none" />
 
@@ -37,7 +38,7 @@ export default function WhoWeAre() {
                 {/* Central Emblem */}
                 <div className="w-28 h-28 rounded-full bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-600 flex flex-col items-center justify-center shadow-lg border-2 border-white/40 z-20">
                   <svg width="40" height="40" viewBox="0 0 50 50" fill="none" className="filter drop-shadow-md">
-                    <path 
+                    <path
                       d="M 25 15 
                          C 27 13, 31 13, 31 17 
                          C 31 20, 28 21, 26.5 21.5 
@@ -68,10 +69,10 @@ export default function WhoWeAre() {
                          C 38.5 31.5, 31.5 38.5, 22.5 38.5 
                          C 16.5 38.5, 11.5 33.5, 11.5 27.5 
                          C 11.5 20.5, 17.5 14.5, 24.5 14.5 
-                         C 26 14.5, 27.5 14.8, 29 15.2" 
-                      stroke="#5E0C09" 
-                      strokeWidth="3.5" 
-                      strokeLinecap="round" 
+                         C 26 14.5, 27.5 14.8, 29 15.2"
+                      stroke="#5E0C09"
+                      strokeWidth="3.5"
+                      strokeLinecap="round"
                       strokeLinejoin="round"
                     />
                   </svg>
@@ -133,11 +134,13 @@ export default function WhoWeAre() {
                   🚩 सेवा • सुरक्षा • संस्कार • धर्म — मानव कल्याण हमारा कर्म
                 </p>
               </div>
+
               <div className="pt-2">
-                <button className="bg-white border-2 border-[#FF6A00] text-[#FF6A00] hover:bg-[#FF6A00] hover:text-white font-bold py-2.5 px-6 rounded-xl transition-colors btn-animated">
+                <Link to="/about" className="inline-block bg-white border-2 border-[#FF6A00] text-[#FF6A00] hover:bg-[#FF6A00] hover:text-white font-bold py-2.5 px-6 rounded-xl transition-colors btn-animated text-sm uppercase tracking-wider">
                   Read More
-                </button>
+                </Link>
               </div>
+
             </div>
           </div>
 
@@ -146,3 +149,4 @@ export default function WhoWeAre() {
     </section>
   );
 }
+

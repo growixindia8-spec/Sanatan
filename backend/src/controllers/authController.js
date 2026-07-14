@@ -2,6 +2,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const OtpSession = require('../models/OtpSession');
+const crypto = require('crypto');
+const { sendSmsOtp } = require('../utils/sendSms');
+const { sendWhatsappOtp } = require('../utils/sendWhatsapp');
+const mongoose = require('mongoose');
+
+const mockOtpSessions = [];
 
 // Helper to generate JWT Token
 const generateToken = (id, role) => {
@@ -17,40 +23,95 @@ const generateTempToken = (mobile) => {
   });
 };
 
-// @desc    Send OTP (Test Mode: Code is always 123456)
+// @desc    Send OTP
 // @route   POST /api/auth/send-otp
 exports.sendOtp = async (req, res, next) => {
-  const { mobile, purpose } = req.body;
+  const { mobile, purpose, deliveryMethod = "sms" } = req.body;
 
-  if (!mobile || !purpose) {
-    return res.status(400).json({ success: false, message: 'Please provide mobile number and purpose' });
+  if (!mobile || !/^[6-9]\d{9}$/.test(mobile)) {
+    return res.status(400).json({ success: false, message: 'Please provide a valid 10-digit Indian mobile number' });
+  }
+
+  if (!deliveryMethod || !['sms', 'whatsapp'].includes(deliveryMethod)) {
+    return res.status(400).json({ success: false, message: 'Please provide a valid delivery method (sms or whatsapp)' });
+  }
+
+  const validPurposes = ["register", "login", "reset-password", "certificate-verification", "donation", "membership"];
+  if (!purpose || !validPurposes.includes(purpose)) {
+    return res.status(400).json({ success: false, message: 'Please provide a valid OTP purpose' });
+  }
+
+  const isProduction = process.env.NODE_ENV === "production";
+
+  if (isProduction && deliveryMethod === 'whatsapp') {
+    return res.status(400).json({
+      success: false,
+      message: "WhatsApp OTP is temporarily unavailable. Please use SMS."
+    });
   }
 
   try {
-    const testOtp = '123456';
-    
+    const isDevelopment = process.env.NODE_ENV !== "production";
+    const otp = isDevelopment
+      ? "123456"
+      : crypto.randomInt(100000, 1000000).toString();
+
+    // In production, send the SMS first before saving to DB
+    if (!isDevelopment) {
+      if (deliveryMethod === 'sms') {
+        if (!process.env.FAST2SMS_API_KEY) {
+          return res.status(500).json({ success: false, message: 'SMS service is not configured.' });
+        }
+        await sendSmsOtp(mobile, otp);
+      }
+    } else {
+      console.log(`[DEVELOPMENT MODE] OTP Code sent to ${mobile} (purpose: ${purpose}, method: ${deliveryMethod}): ${otp}`);
+    }
+
     // Hash OTP before saving to database
     const salt = await bcrypt.genSalt(10);
-    const otpHash = await bcrypt.hash(testOtp, salt);
+    const otpHash = await bcrypt.hash(otp, salt);
 
-    // Save/Overwrite OTP in database
-    await OtpSession.deleteMany({ mobile, purpose });
-    
+    const isDbConnected = mongoose.connection.readyState === 1;
     const expiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiry
-    await OtpSession.create({
-      mobile,
-      otpHash,
-      purpose,
-      expiresAt: expiry
-    });
 
-    // Log to console in development/test mode
-    console.log(`[TEST MODE] OTP Code sent to ${mobile} (purpose: ${purpose}): ${testOtp}`);
+    if (isDbConnected) {
+      // Save/Overwrite OTP in database
+      await OtpSession.deleteMany({ mobile, purpose });
+      await OtpSession.create({
+        mobile,
+        otpHash,
+        purpose,
+        expiresAt: expiry
+      });
+    } else {
+      console.warn("MongoDB is offline. Saving OTP session in-memory.");
+      // Delete old matching mock session
+      const index = mockOtpSessions.findIndex(s => s.mobile === mobile && s.purpose === purpose);
+      if (index !== -1) {
+        mockOtpSessions.splice(index, 1);
+      }
+      mockOtpSessions.push({
+        mobile,
+        otpHash,
+        purpose,
+        expiresAt: expiry,
+        attempts: 0
+      });
+    }
 
-    return res.status(200).json({ 
-      success: true, 
-      message: `OTP sent successfully in test mode. (Logged to server console)`
-    });
+    if (isDevelopment) {
+      return res.status(200).json({ 
+        success: true, 
+        message: "Test OTP generated. Use 123456.",
+        testOtp: "123456"
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: "OTP sent successfully by SMS."
+      });
+    }
 
   } catch (err) {
     next(err);
@@ -66,9 +127,20 @@ exports.verifyOtp = async (req, res, next) => {
     return res.status(400).json({ success: false, message: 'Please provide mobile, otp, and purpose' });
   }
 
+  const isDevelopment = process.env.NODE_ENV !== "production";
+
   try {
-    // Check if test OTP bypass is triggered
-    if (otp === '123456') {
+    // Check if test OTP bypass is triggered (only permitted in development/test!)
+    if (isDevelopment && otp === '123456') {
+      const isDbConnected = mongoose.connection.readyState === 1;
+      if (isDbConnected) {
+        await OtpSession.deleteMany({ mobile, purpose });
+      } else {
+        const index = mockOtpSessions.findIndex(s => s.mobile === mobile && s.purpose === purpose);
+        if (index !== -1) {
+          mockOtpSessions.splice(index, 1);
+        }
+      }
       const tempToken = generateTempToken(mobile);
       return res.status(200).json({ 
         success: true, 
@@ -77,19 +149,36 @@ exports.verifyOtp = async (req, res, next) => {
       });
     }
 
-    const otpRecord = await OtpSession.findOne({ mobile, purpose });
+    const isDbConnected = mongoose.connection.readyState === 1;
+    let otpRecord;
+
+    if (isDbConnected) {
+      otpRecord = await OtpSession.findOne({ mobile, purpose });
+    } else {
+      otpRecord = mockOtpSessions.find(s => s.mobile === mobile && s.purpose === purpose);
+    }
 
     if (!otpRecord) {
       return res.status(400).json({ success: false, message: 'No active OTP found or expired' });
     }
 
     if (otpRecord.expiresAt < new Date()) {
-      await OtpSession.deleteOne({ _id: otpRecord._id });
+      if (isDbConnected) {
+        await OtpSession.deleteOne({ _id: otpRecord._id });
+      } else {
+        const index = mockOtpSessions.indexOf(otpRecord);
+        if (index !== -1) mockOtpSessions.splice(index, 1);
+      }
       return res.status(400).json({ success: false, message: 'OTP has expired' });
     }
 
     if (otpRecord.attempts >= 5) {
-      await OtpSession.deleteOne({ _id: otpRecord._id });
+      if (isDbConnected) {
+        await OtpSession.deleteOne({ _id: otpRecord._id });
+      } else {
+        const index = mockOtpSessions.indexOf(otpRecord);
+        if (index !== -1) mockOtpSessions.splice(index, 1);
+      }
       return res.status(400).json({ success: false, message: 'Max attempts exceeded, OTP deleted' });
     }
 
@@ -97,12 +186,19 @@ exports.verifyOtp = async (req, res, next) => {
 
     if (!isMatch) {
       otpRecord.attempts += 1;
-      await otpRecord.save();
+      if (isDbConnected) {
+        await otpRecord.save();
+      }
       return res.status(400).json({ success: false, message: 'Invalid verification OTP' });
     }
 
     // Clear verification key
-    await OtpSession.deleteOne({ _id: otpRecord._id });
+    if (isDbConnected) {
+      await OtpSession.deleteOne({ _id: otpRecord._id });
+    } else {
+      const index = mockOtpSessions.indexOf(otpRecord);
+      if (index !== -1) mockOtpSessions.splice(index, 1);
+    }
 
     // Generate token for next step
     const tempToken = generateTempToken(mobile);
@@ -218,10 +314,12 @@ exports.resetPassword = async (req, res, next) => {
     return res.status(400).json({ success: false, message: 'Please specify mobile, otp, and newPassword' });
   }
 
+  const isDevelopment = process.env.NODE_ENV !== "production";
+
   try {
     // Check verification OTP (either test mode bypass, tempToken JWT, or OtpSession check)
     let tokenVerified = false;
-    if (otp === '123456') {
+    if (isDevelopment && otp === '123456') {
       tokenVerified = true;
     } else {
       try {
@@ -235,7 +333,15 @@ exports.resetPassword = async (req, res, next) => {
     }
 
     if (!tokenVerified) {
-      const otpRecord = await OtpSession.findOne({ mobile, purpose: 'reset-password' });
+      const isDbConnected = mongoose.connection.readyState === 1;
+      let otpRecord;
+
+      if (isDbConnected) {
+        otpRecord = await OtpSession.findOne({ mobile, purpose: 'reset-password' });
+      } else {
+        otpRecord = mockOtpSessions.find(s => s.mobile === mobile && s.purpose === 'reset-password');
+      }
+
       if (!otpRecord) {
         return res.status(400).json({ success: false, message: 'Expired or missing OTP record' });
       }
@@ -243,7 +349,13 @@ exports.resetPassword = async (req, res, next) => {
       if (!isMatch) {
         return res.status(400).json({ success: false, message: 'Incorrect verification OTP' });
       }
-      await OtpSession.deleteOne({ _id: otpRecord._id });
+
+      if (isDbConnected) {
+        await OtpSession.deleteOne({ _id: otpRecord._id });
+      } else {
+        const index = mockOtpSessions.indexOf(otpRecord);
+        if (index !== -1) mockOtpSessions.splice(index, 1);
+      }
     }
 
     // Hash new password

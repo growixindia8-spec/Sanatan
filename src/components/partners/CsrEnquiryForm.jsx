@@ -29,6 +29,16 @@ export default function CsrEnquiryForm() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const getApiUrl = () => {
+    let url = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    if (url.endsWith('/')) {
+      url = url.slice(0, -1);
+    }
+    return url;
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -49,10 +59,41 @@ export default function CsrEnquiryForm() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('CSR Form Submission Data:', formData);
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+
+    // Validate focusAreas when interested is 'Yes'
+    if (formData.interestedInCollaboration === 'Yes' && formData.focusAreas.length === 0) {
+      setError('Please select at least one CSR focus area.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${getApiUrl()}/api/csr/enquiry`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          designation: formData.designation || 'Representative'
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setError(data.message || 'Error submitting inquiry. Please try again.');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Network error. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -459,13 +500,20 @@ export default function CsrEnquiryForm() {
         </div>
       )}
 
+      {error && (
+        <div className="p-4 bg-red-50 text-red-700 border border-red-200 rounded-xl text-center text-sm font-devanagari font-semibold">
+          {error}
+        </div>
+      )}
+
       {/* Submit Button */}
       {formData.interestedInCollaboration !== 'No' && (
         <button
           type="submit"
-          className="w-full bg-[#FF6A00] text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 text-sm uppercase tracking-wider"
+          disabled={loading}
+          className="w-full bg-[#FF6A00] text-white py-4 rounded-xl font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 text-sm uppercase tracking-wider disabled:opacity-50"
         >
-          Submit CSR Enquiry
+          {loading ? 'Submitting...' : 'Submit CSR Enquiry'}
         </button>
       )}
     </form>

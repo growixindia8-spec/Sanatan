@@ -4,11 +4,13 @@ import { api } from "../../lib/apiClient";
 export default function OtpVerification({ onVerified, purpose = "register" }) {
   const [step, setStep] = useState("mobile"); // "mobile" | "otp" | "verified"
   const [mobile, setMobile] = useState("");
-  const [deliveryMethod, setDeliveryMethod] = useState("whatsapp"); // "whatsapp" | "sms"
+  const [deliveryMethod, setDeliveryMethod] = useState("sms"); // Default to sms
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [serverTestOtp, setServerTestOtp] = useState("");
   const inputRefs = useRef([]);
 
   // Countdown timer for resend
@@ -27,36 +29,54 @@ export default function OtpVerification({ onVerified, purpose = "register" }) {
   }
 
   async function handleSendOtp() {
+    if (loading) return;
     setError("");
     if (!validateMobile(mobile)) {
       setError("कृपया सही 10-अंकों का मोबाइल नंबर दर्ज करें।");
       return;
     }
+    setLoading(true);
     try {
-      const res = await api.sendOtp(mobile, purpose);
+      const res = await api.sendOtp(mobile, purpose, deliveryMethod);
       if (res.success) {
         setStep("otp");
         setTimer(30);
         setCanResend(false);
         setOtp(["", "", "", "", "", ""]);
+        if (res.testOtp) {
+          setServerTestOtp(res.testOtp);
+        } else {
+          setServerTestOtp("");
+        }
       } else {
         setError(res.message || "OTP भेजने में समस्या हुई।");
       }
     } catch (err) {
       setError(err.message || "OTP भेजने में समस्या हुई। कृपया पुनः प्रयास करें।");
+    } finally {
+      setLoading(false);
     }
   }
 
   async function handleResend() {
+    if (loading) return;
     setError("");
+    setLoading(true);
     try {
-      await api.sendOtp(mobile, purpose);
+      const res = await api.sendOtp(mobile, purpose, deliveryMethod);
       setTimer(30);
       setCanResend(false);
       setOtp(["", "", "", "", "", ""]);
+      if (res.testOtp) {
+        setServerTestOtp(res.testOtp);
+      } else {
+        setServerTestOtp("");
+      }
       inputRefs.current[0]?.focus();
     } catch (err) {
       setError(err.message || "OTP पुनः भेजने में समस्या हुई।");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -75,28 +95,32 @@ export default function OtpVerification({ onVerified, purpose = "register" }) {
   }
 
   async function handleVerify() {
+    if (loading) return;
     setError("");
     const entered = otp.join("");
     if (entered.length < 6) {
       setError("कृपया पूरा 6-अंकों का OTP दर्ज करें।");
       return;
     }
+    setLoading(true);
     try {
       const data = await api.verifyOtp(mobile, entered, purpose);
       if (!data.success) {
-        setError("गलत OTP। कृपया पुनः प्रयास करें। (Test Mode में सही OTP: 123456)");
+        setError("गलत OTP। कृपया पुनः प्रयास करें।");
         return;
       }
       setStep("verified");
       onVerified?.(mobile, data.tempToken);
     } catch (err) {
       setError(err.message || "सत्यापन में समस्या हुई। कृपया पुनः प्रयास करें।");
+    } finally {
+      setLoading(false);
     }
   }
 
   if (step === "verified") {
     return (
-      <div className="text-center py-6">
+      <div className="text-center py-6 animate-fadeIn">
         <div className="text-green-600 text-4xl mb-2">✓</div>
         <p className="font-bold text-lg text-charcoal">Mobile Verified</p>
         <p className="text-gray-500 text-sm">{mobile}</p>
@@ -104,12 +128,22 @@ export default function OtpVerification({ onVerified, purpose = "register" }) {
     );
   }
 
+  const showTestOtp = !import.meta.env.PROD;
+
   if (step === "otp") {
     return (
       <div className="space-y-4">
-        <p className="text-sm text-gray-600">
-          {mobile} पर भेजा गया 6-अंकों का OTP दर्ज करें।
-        </p>
+        <div className="text-sm text-gray-655">
+          {showTestOtp && serverTestOtp ? (
+            <div className="bg-orange-50 border border-orange-200 text-orange-900 px-4 py-2.5 rounded-xl text-center text-sm font-bold font-mono">
+              🔧 Test Mode OTP: {serverTestOtp}
+            </div>
+          ) : (
+            <div className="bg-green-50 border border-green-200 text-green-905 px-4 py-2.5 rounded-xl text-center text-sm font-medium">
+              📩 OTP sent successfully by SMS to +91 {mobile}
+            </div>
+          )}
+        </div>
         <div className="flex gap-2 justify-center">
           {otp.map((digit, i) => (
             <input
@@ -128,13 +162,18 @@ export default function OtpVerification({ onVerified, purpose = "register" }) {
         {error && <p className="text-red-650 text-red-600 text-sm text-center font-bold">{error}</p>}
         <button
           onClick={handleVerify}
-          className="w-full bg-[#FF6600] hover:bg-orange-700 text-white font-bold py-3 rounded-full transition"
+          disabled={loading}
+          className="w-full bg-[#FF6600] hover:bg-orange-700 text-white font-bold py-3 rounded-full transition disabled:opacity-50"
         >
-          Verify & Continue
+          {loading ? "Verifying..." : "Verify & Continue"}
         </button>
         <div className="text-center text-sm">
           {canResend ? (
-            <button onClick={handleResend} className="text-[#FF6600] font-semibold">
+            <button 
+              onClick={handleResend} 
+              disabled={loading}
+              className="text-[#FF6600] font-semibold disabled:opacity-50"
+            >
               Resend OTP
             </button>
           ) : (
@@ -149,9 +188,9 @@ export default function OtpVerification({ onVerified, purpose = "register" }) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-xs font-bold text-gray-600">MOBILE NUMBER</label>
+        <label className="text-xs font-bold text-gray-650 block mb-1">MOBILE NUMBER</label>
         <div className="flex items-center border rounded-lg px-3 py-2 mt-1 bg-white">
-          <span className="text-gray-400 mr-2">📱</span>
+          <span className="text-gray-450 mr-2">📱</span>
           <input
             type="tel"
             maxLength={10}
@@ -163,39 +202,13 @@ export default function OtpVerification({ onVerified, purpose = "register" }) {
         </div>
       </div>
 
-      <div>
-        <label className="text-xs font-bold text-gray-600 block mb-2">OTP कैसे प्राप्त करें?</label>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => setDeliveryMethod("whatsapp")}
-            className={`flex-1 py-2 rounded-full border text-sm font-semibold transition ${
-              deliveryMethod === "whatsapp"
-                ? "bg-[#FF6600] text-white border-[#FF6600]"
-                : "bg-white text-gray-600 border-gray-300"
-            }`}
-          >
-            💬 WhatsApp
-          </button>
-          <button
-            type="button"
-            onClick={() => setDeliveryMethod("sms")}
-            className={`flex-1 py-2 rounded-full border text-sm font-semibold transition ${
-              deliveryMethod === "sms"
-                ? "bg-[#FF6600] text-white border-[#FF6600]"
-                : "bg-white text-gray-600 border-gray-300"
-            }`}
-          >
-            📩 SMS
-          </button>
-        </div>
-      </div>
 
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      {error && <p className="text-red-650 text-red-600 text-sm text-center font-bold">{error}</p>}
 
       <button
         onClick={handleSendOtp}
-        className="w-full bg-[#FF6600] hover:bg-orange-700 text-white font-bold py-3 rounded-full transition animate-pulse"
+        disabled={loading}
+        className="w-full bg-[#FF6600] hover:bg-orange-700 text-white font-bold py-3 rounded-full transition disabled:opacity-50"
       >
         Send OTP
       </button>

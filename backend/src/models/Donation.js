@@ -14,6 +14,12 @@ const donationSchema = new mongoose.Schema({
   want80G: { type: Boolean, default: false },
   panNumber: { type: String },
   receiptUrl: { type: String },               // generated 80G receipt PDF Cloudinary URL
+  razorpayOrderId: { type: String },
+  razorpayPaymentId: { type: String },
+  festivalId: { type: String },
+  festivalName: { type: String },
+  campaign: { type: String },
+  sourceType: { type: String, default: 'direct' },
   createdAt: { type: Date, default: Date.now }
 });
 

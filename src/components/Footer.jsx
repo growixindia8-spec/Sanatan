@@ -94,9 +94,9 @@ export default function Footer() {
               </h4>
               <ul className="space-y-3 text-sm">
                 <li><Link to="/about" className="hover:text-black transition-colors">{t('footer.aboutUs')}</Link></li>
-                <li><Link to="/about#policies" className="hover:text-black transition-colors">{t('footer.privacyPolicy')}</Link></li>
-                <li><Link to="/about#policies" className="hover:text-black transition-colors">{t('footer.termsConditions')}</Link></li>
-                <li><Link to="/about#policies" className="hover:text-black transition-colors">{t('footer.refundPolicy')}</Link></li>
+                <li><Link to="/privacy-policy" className="hover:text-black transition-colors">{t('footer.privacyPolicy')}</Link></li>
+                <li><Link to="/terms-and-conditions" className="hover:text-black transition-colors">{t('footer.termsConditions')}</Link></li>
+                <li><Link to="/refund-policy" className="hover:text-black transition-colors">{t('footer.refundPolicy')}</Link></li>
               </ul>
             </div>
             <div className="mt-4 pt-3 border-t border-white/20 text-xs font-semibold text-white/90">

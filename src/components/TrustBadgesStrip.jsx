@@ -1,43 +1,48 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Award, FileText, Landmark, FileCheck, CheckCircle } from 'lucide-react';
-import CertificateModal from './shared/CertificateModal';
+import CertificatePreviewModal from './CertificatePreviewModal';
 
-const badges = [
+const certificates = [
   {
-    icon: Landmark,
-    code: "Section 8",
-    label: "Company Registered",
-    color: "text-amber-600 bg-amber-50"
+    title: "Section 8",
+    subtitle: "COMPANY REGISTERED",
+    badge: "/certificates/section-8-badge.webp",
+    document: "/certificates/documents/section-8-certificate.jpg",
+    hideSensitiveDetails: true,
+    redactedDocument: "/certificates/documents/section-8-certificate-redacted.jpg"
   },
   {
-    icon: ShieldCheck,
-    code: "12A",
-    label: "Income Tax Exempt",
-    color: "text-blue-600 bg-blue-50"
+    title: "12A",
+    subtitle: "INCOME TAX EXEMPT",
+    badge: "/certificates/12a-badge.webp",
+    document: "/certificates/documents/12a-certificate.jpg",
+    hideSensitiveDetails: true,
+    redactedDocument: "/certificates/documents/12a-certificate-redacted.jpg"
   },
   {
-    icon: FileText,
-    code: "80G",
-    label: "50% Tax Deduction",
-    color: "text-emerald-600 bg-emerald-50"
+    title: "80G",
+    subtitle: "50% TAX DEDUCTION",
+    badge: "/certificates/80g-badge.webp",
+    document: "/certificates/documents/80g-certificate.jpg",
+    hideSensitiveDetails: true,
+    redactedDocument: "/certificates/documents/80g-certificate-redacted.jpg"
   },
   {
-    icon: Award,
-    code: "CSR-1",
-    label: "MCA Certified",
-    color: "text-purple-600 bg-purple-50"
+    title: "CSR-1",
+    subtitle: "MCA CERTIFIED",
+    badge: "/certificates/csr1-badge.webp",
+    document: "/certificates/documents/csr1-certificate.jpg"
   },
   {
-    icon: FileCheck,
-    code: "NGO Darpan",
-    label: "Niti Aayog Listed",
-    color: "text-indigo-600 bg-indigo-50"
+    title: "NGO Darpan",
+    subtitle: "NITI AAYOG LISTED",
+    badge: "/certificates/ngo-darpan-badge.webp",
+    document: "/certificates/documents/ngo-darpan-certificate.jpg"
   },
   {
-    icon: CheckCircle,
-    code: "ISO 9001:2015",
-    label: "Certified Operations",
-    color: "text-teal-600 bg-teal-50"
+    title: "ISO 9001:2015",
+    subtitle: "CERTIFIED OPERATIONS",
+    badge: "/certificates/iso-9001-badge.webp",
+    document: "/certificates/documents/iso-9001-certificate.jpg"
   }
 ];
 
@@ -60,25 +65,44 @@ export default function TrustBadgesStrip() {
 
         {/* 6 Cards in single row wrapping on mobile/tablet */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-          {badges.map((badge, idx) => {
-            const Icon = badge.icon;
+          {certificates.map((certificate, idx) => {
             return (
               <button 
                 key={idx} 
-                onClick={() => setSelectedBadge(badge)}
-                className="flex flex-col items-center justify-center bg-white shadow-sm border border-gray-100 hover:border-saffron/20 hover:shadow-md transition-all duration-300 rounded-[12px] p-6 text-center group focus:outline-none focus:ring-2 focus:ring-saffron focus:ring-offset-2"
+                type="button"
+                onClick={() => setSelectedBadge(certificate)}
+                aria-label={`View ${certificate.title} certificate`}
+                className="flex flex-col items-center justify-between bg-white shadow-sm border border-gray-100 hover:border-saffron/20 hover:shadow-md transition-all duration-300 rounded-[12px] p-6 text-center group focus:outline-none focus:ring-2 focus:ring-saffron focus:ring-offset-2 cursor-pointer h-full"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedBadge(certificate);
+                  }
+                }}
               >
-                {/* Circular Badge Icon (~56px = w-14 h-14) */}
-                <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 ${badge.color}`}>
-                  <Icon size={26} strokeWidth={2} />
+                <div className="flex flex-col items-center justify-center flex-grow w-full">
+                  {/* Circular Badge Image */}
+                  <div className="h-20 w-20 mb-4 transition-transform duration-300 group-hover:scale-110 flex items-center justify-center">
+                    <img
+                      src={certificate.badge}
+                      alt={`${certificate.title} registration badge`}
+                      className="h-20 w-20 object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                  
+                  {/* Text Section */}
+                  <span className="font-bold text-charcoal text-[15px] block mb-1">
+                    {certificate.title}
+                  </span>
+                  <span className="text-[11px] text-gray-500 font-medium tracking-wide uppercase">
+                    {certificate.subtitle}
+                  </span>
                 </div>
-                
-                {/* Text Section */}
-                <span className="font-bold text-charcoal text-[15px] block mb-1">
-                  {badge.code}
-                </span>
-                <span className="text-[11px] text-gray-500 font-medium tracking-wide uppercase">
-                  {badge.label}
+
+                {/* Subtle Click to View instruction */}
+                <span className="text-[10px] text-gray-400 font-medium tracking-wide uppercase mt-4 transition-colors group-hover:text-saffron block">
+                  Click to view certificate
                 </span>
               </button>
             );
@@ -87,11 +111,13 @@ export default function TrustBadgesStrip() {
 
       </div>
 
-      <CertificateModal 
+      <CertificatePreviewModal 
         isOpen={!!selectedBadge} 
         onClose={() => setSelectedBadge(null)} 
-        certificate={selectedBadge} 
+        certificate={selectedBadge}
       />
     </section>
   );
 }
+
+

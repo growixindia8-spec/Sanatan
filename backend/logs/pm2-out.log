@@ -1,0 +1,22 @@
+2026-07-14 13:59:25: Server running in development mode on port 5000
+2026-07-14 14:09:28: Server running in development mode on port 5000
+2026-07-14 14:15:51: [DEVELOPMENT MODE] OTP Code sent to 8758145858 (purpose: membership, method: sms): 123456
+2026-07-14 14:15:51: [0mPOST /api/auth/send-otp [32m200[0m 160.187 ms - 79[0m
+2026-07-14 14:15:57: [0mPOST /api/auth/verify-otp [32m200[0m 9.965 ms - 245[0m
+2026-07-14 14:17:59: [0mPOST /api/membership/register [32m200[0m 11.160 ms - 267[0m
+2026-07-14 14:17:59: [0mPOST /api/membership/create-order [32m200[0m 295.856 ms - 154[0m
+2026-07-14 14:19:14: [0mPOST /api/donations/create-order [32m200[0m 146.705 ms - 152[0m
+2026-07-14 14:21:14: [0mPOST /api/donations/create-order [32m200[0m 138.131 ms - 152[0m
+2026-07-14 14:22:44: [DEVELOPMENT MODE] OTP Code sent to 8758145858 (purpose: membership, method: sms): 123456
+2026-07-14 14:22:44: [0mPOST /api/auth/send-otp [32m200[0m 115.560 ms - 79[0m
+2026-07-14 14:22:53: [0mPOST /api/auth/verify-otp [33m400[0m 124.355 ms - 54[0m
+2026-07-14 14:22:57: [0mPOST /api/auth/verify-otp [32m200[0m 1.827 ms - 245[0m
+2026-07-14 14:23:49: [0mPOST /api/membership/register [32m200[0m 37.839 ms - 269[0m
+2026-07-14 14:23:49: [0mPOST /api/membership/create-order [32m200[0m 182.364 ms - 155[0m
+2026-07-14 14:41:55: [0mPOST /api/auth/login [0m-[0m - ms - -[0m
+2026-07-14 15:21:11: [0mPOST /api/auth/login [31m500[0m 10012.658 ms - 441[0m
+2026-07-14 15:21:25: [0mPOST /api/auth/login [31m500[0m 10018.425 ms - 441[0m
+2026-07-14 15:22:02: [0mPOST /api/auth/login [31m500[0m 10003.988 ms - 441[0m
+2026-07-14 18:14:39: [DEVELOPMENT MODE] OTP Code sent to 8758145858 (purpose: certificate-verification, method: sms): 123456
+2026-07-14 18:14:39: [0mPOST /api/auth/send-otp [32m200[0m 166.448 ms - 79[0m
+2026-07-14 18:14:49: [0mPOST /api/auth/verify-otp [32m200[0m 16.270 ms - 245[0m

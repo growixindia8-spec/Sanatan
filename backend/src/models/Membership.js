@@ -4,7 +4,7 @@ const membershipSchema = new mongoose.Schema({
   memberId: { type: String, unique: true },  // SDMKF-MH-000125 format, auto-generated
   fullName: { type: String, required: true },
   mobile: { type: String, required: true },
-  email: { type: String, required: true },
+  email: { type: String },
   state: { type: String, required: true },
   district: { type: String, required: true },
   city: { type: String, required: true },
@@ -18,6 +18,17 @@ const membershipSchema = new mongoose.Schema({
   idCardRequired: { type: Boolean, default: false },
   photoUrl: { type: String },
   idProofUrl: { type: String },
+  completeAddress: { type: String },
+  pincode: { type: String },
+  identityVerification: {
+    aadhaarFrontUrl: { type: String },
+    aadhaarBackUrl: { type: String },
+    selfieUrl: { type: String },
+    status: { type: String, enum: ['verified', 'pending', 'skipped'], default: 'pending' }
+  },
+  optionalDonation: { type: Number, default: 0 },
+  totalAmountPaid: { type: Number },
+  applicationNumber: { type: String, unique: true, sparse: true },
   message: { type: String },
   paymentStatus: { type: String, enum: ['pending', 'paid'], default: 'pending' },
   applicationStatus: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },

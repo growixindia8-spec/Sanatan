@@ -19,8 +19,14 @@ import ContactUs from './pages/more/ContactUs';
 import SplashScreen from './components/shared/SplashScreen';
 import ChatbotWidget from './components/shared/ChatbotWidget';
 import JoinTheMission from './pages/JoinTheMission';
+import CategoryJoinPage from './pages/CategoryJoinPage';
 import { PortalAuthProvider } from './context/PortalAuthContext';
 import Admin from './pages/Admin';
+import NotFound from './pages/NotFound';
+import PrivacyPolicy from './pages/legal/PrivacyPolicy';
+import TermsConditions from './pages/legal/TermsConditions';
+import RefundCancellationPolicy from './pages/legal/RefundCancellationPolicy';
+
 function App() {
   return (
     <>
@@ -30,6 +36,7 @@ function App() {
           <Routes>
             <Route path="/admin" element={<Admin />} />
             <Route path="/join-the-mission" element={<JoinTheMission />} />
+            <Route path="/join-the-mission/:categorySlug" element={<CategoryJoinPage />} />
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/activities/current" element={<CurrentActivities />} />
@@ -47,6 +54,10 @@ function App() {
             <Route path="/community-voices" element={<CommunityVoices />} />
             <Route path="/legal-documents" element={<LegalDocuments />} />
             <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-and-conditions" element={<TermsConditions />} />
+            <Route path="/refund-policy" element={<RefundCancellationPolicy />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <ChatbotWidget />
         </Router>
@@ -56,3 +67,4 @@ function App() {
 }
 
 export default App;
+

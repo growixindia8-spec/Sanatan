@@ -20,7 +20,8 @@ import {
   PlusCircle, 
   ClipboardList, 
   Info,
-  Lock
+  Lock,
+  Calendar
 } from 'lucide-react';
 export default function Portal() {
   const { user, error, login, logout, isAuthenticated } = usePortalAuth();
@@ -33,7 +34,15 @@ export default function Portal() {
   useEffect(() => {
     if (user) {
       const isMgmt = user.role === 'coordinator' || user.role === 'admin';
-      setActiveTab(isMgmt ? 'dashboard' : 'profile');
+      if (isMgmt) {
+        if (window.location.pathname.endsWith('/admin/festivals') || window.location.pathname.endsWith('/festivals')) {
+          setActiveTab('festivals');
+        } else {
+          setActiveTab('dashboard');
+        }
+      } else {
+        setActiveTab('profile');
+      }
     }
   }, [user]);
   const handleLoginSubmit = async (e) => {
@@ -177,6 +186,18 @@ export default function Portal() {
                   >
                     <Bell size={18} /> Notifications
                   </button>
+                  {user?.role === 'admin' && (
+                    <button 
+                      onClick={() => setActiveTab('festivals')}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm ${
+                        activeTab === 'festivals' 
+                          ? 'bg-orange-50 text-[#FF6A00]' 
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-charcoal'
+                      }`}
+                    >
+                      <Calendar size={18} /> Festivals Calendar
+                    </button>
+                  )}
                 </>
               )}
               <button 
@@ -207,6 +228,7 @@ export default function Portal() {
           {activeTab === 'verify-member' && <VerifyMembershipPanel />}
           {activeTab === 'financial-reports' && <AddFinancialReportPanel />}
           {activeTab === 'notifications' && <NotificationsPanel />}
+          {activeTab === 'festivals' && <FestivalsPanel />}
           {activeTab === 'profile' && <MyProfilePanel />}
         </div>
       </main>
@@ -1122,6 +1144,391 @@ function MyProfilePanel() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// --- FestivalsPanel ---
+function FestivalsPanel() {
+  const [festivals, setFestivals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [actionLoadingId, setActionLoadingId] = useState(null);
+
+  // Form State
+  const [editId, setEditId] = useState(null); // null means creating, otherwise editing ID
+  const [festivalName, setFestivalName] = useState('');
+  const [festivalDate, setFestivalDate] = useState('');
+  const [associatedMission, setAssociatedMission] = useState('');
+  const [donationCampaign, setDonationCampaign] = useState('');
+  const [donationLink, setDonationLink] = useState('');
+  const [status, setStatus] = useState('active');
+  const [isPublished, setIsPublished] = useState(true);
+  const [displayOrder, setDisplayOrder] = useState(0);
+
+  const fetchFestivals = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const data = await api.adminGetFestivals();
+      setFestivals(data.data || []);
+    } catch (err) {
+      setError(err.message || 'Failed to load festivals');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFestivals();
+  }, []);
+
+  const resetForm = () => {
+    setEditId(null);
+    setFestivalName('');
+    setFestivalDate('');
+    setAssociatedMission('');
+    setDonationCampaign('');
+    setDonationLink('');
+    setStatus('active');
+    setIsPublished(true);
+    setDisplayOrder(0);
+  };
+
+  const handleEditClick = (fest) => {
+    setEditId(fest._id);
+    setFestivalName(fest.festivalName);
+    const formattedDate = fest.festivalDate ? new Date(fest.festivalDate).toISOString().substring(0, 10) : '';
+    setFestivalDate(formattedDate);
+    setAssociatedMission(fest.associatedMission);
+    setDonationCampaign(fest.donationCampaign || '');
+    setDonationLink(fest.donationLink || '');
+    setStatus(fest.status || 'active');
+    setIsPublished(fest.isPublished !== undefined ? fest.isPublished : true);
+    setDisplayOrder(fest.displayOrder || 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    
+    if (!festivalName || !festivalDate || !associatedMission) {
+      setError('Please fill in all required fields (Festival Name, Date, Associated Mission).');
+      return;
+    }
+
+    const payload = {
+      festivalName,
+      festivalDate,
+      associatedMission,
+      donationCampaign,
+      donationLink,
+      status,
+      isPublished,
+      displayOrder: Number(displayOrder) || 0
+    };
+
+    try {
+      if (editId) {
+        await api.adminUpdateFestival(editId, payload);
+        setSuccess('Festival successfully updated!');
+      } else {
+        await api.adminCreateFestival(payload);
+        setSuccess('Festival successfully created!');
+      }
+      resetForm();
+      fetchFestivals();
+    } catch (err) {
+      setError(err.message || 'Operation failed');
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('क्या आप वाकई इस पर्व को हटाना चाहते हैं? / Are you sure you want to delete this festival?')) {
+      return;
+    }
+
+    setError('');
+    setSuccess('');
+    setActionLoadingId(id);
+
+    try {
+      await api.adminDeleteFestival(id);
+      setSuccess('Festival successfully deleted!');
+      fetchFestivals();
+    } catch (err) {
+      setError(err.message || 'Delete operation failed');
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  const togglePublish = async (fest) => {
+    setError('');
+    setSuccess('');
+    setActionLoadingId(fest._id);
+    try {
+      await api.adminUpdateFestival(fest._id, { isPublished: !fest.isPublished });
+      setSuccess(`Festival status set to ${!fest.isPublished ? 'Published' : 'Unpublished'}`);
+      fetchFestivals();
+    } catch (err) {
+      setError(err.message || 'Update failed');
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  const toggleStatus = async (fest) => {
+    setError('');
+    setSuccess('');
+    setActionLoadingId(fest._id);
+    const newStatus = fest.status === 'active' ? 'completed' : 'active';
+    try {
+      await api.adminPatchFestivalStatus(fest._id, newStatus);
+      setSuccess(`Festival status set to ${newStatus}`);
+      fetchFestivals();
+    } catch (err) {
+      setError(err.message || 'Update failed');
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  return (
+    <div className="space-y-6 text-charcoal">
+      {/* Form Card */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm">
+        <h3 className="text-xl font-bold text-charcoal mb-2 flex items-center gap-2">
+          <PlusCircle size={22} className="text-saffron" />
+          {editId ? 'पर्व संपादित करें / Edit Festival' : 'नया पर्व जोड़ें / Add New Festival'}
+        </h3>
+        <p className="text-gray-500 text-xs mb-6">
+          Create or update festivals that display in the public Festival & Seva Calendar.
+        </p>
+
+        {error && (
+          <div className="mb-4 p-3.5 bg-red-50 border border-red-100 text-red-700 text-xs font-semibold rounded-xl flex items-center gap-2">
+            <AlertCircle size={16} className="shrink-0 text-red-500" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {success && (
+          <div className="mb-4 p-3.5 bg-green-50 border border-green-100 text-green-700 text-xs font-semibold rounded-xl flex items-center gap-2">
+            <Check size={16} className="shrink-0 text-green-500" />
+            <span>{success}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {/* Festival Name */}
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Festival Name *</label>
+              <input
+                type="text"
+                required
+                value={festivalName}
+                onChange={(e) => setFestivalName(e.target.value)}
+                placeholder="e.g. 🕉️ मकर संक्रांति"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-saffron text-sm transition-all"
+              />
+            </div>
+
+            {/* Festival Date */}
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Festival Date *</label>
+              <input
+                type="date"
+                required
+                value={festivalDate}
+                onChange={(e) => setFestivalDate(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-saffron text-sm transition-all"
+              />
+            </div>
+
+            {/* Display Order */}
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Display Order</label>
+              <input
+                type="number"
+                value={displayOrder}
+                onChange={(e) => setDisplayOrder(e.target.value)}
+                placeholder="0"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-saffron text-sm transition-all"
+              />
+            </div>
+
+            {/* Associated Mission */}
+            <div className="sm:col-span-2 lg:col-span-3">
+              <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Associated Mission / Seva *</label>
+              <input
+                type="text"
+                required
+                value={associatedMission}
+                onChange={(e) => setAssociatedMission(e.target.value)}
+                placeholder="e.g. अन्न सेवा • कंबल वितरण"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-saffron text-sm transition-all"
+              />
+            </div>
+
+            {/* Donation Campaign */}
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Donation Campaign ID (Optional)</label>
+              <input
+                type="text"
+                value={donationCampaign}
+                onChange={(e) => setDonationCampaign(e.target.value)}
+                placeholder="e.g. makar-sankranti"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-saffron text-sm transition-all"
+              />
+            </div>
+
+            {/* Donation Link */}
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Custom Donation URL (Optional)</label>
+              <input
+                type="text"
+                value={donationLink}
+                onChange={(e) => setDonationLink(e.target.value)}
+                placeholder="e.g. /donate?campaign=makar-sankranti"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-saffron text-sm transition-all"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-6 border-t border-gray-100 pt-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Status:</span>
+              {['active', 'completed'].map((st) => (
+                <label key={st} className="flex items-center gap-1.5 text-xs text-gray-650 cursor-pointer capitalize">
+                  <input
+                    type="radio"
+                    name="festivalStatus"
+                    checked={status === st}
+                    onChange={() => setStatus(st)}
+                    className="text-saffron focus:ring-saffron"
+                  />
+                  {st}
+                </label>
+              ))}
+            </div>
+
+            <label className="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wider cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isPublished}
+                onChange={(e) => setIsPublished(e.target.checked)}
+                className="rounded border-gray-300 text-saffron focus:ring-saffron"
+              />
+              Publish to Calendar Page
+            </label>
+          </div>
+
+          <div className="flex gap-3 justify-end border-t border-gray-100 pt-5">
+            {editId && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="px-5 py-2.5 border border-gray-200 text-gray-500 rounded-xl hover:bg-gray-50 font-bold text-xs uppercase transition-all"
+              >
+                Cancel
+              </button>
+            )}
+            <button
+              type="submit"
+              className="bg-charcoal hover:bg-gray-800 text-white font-bold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all"
+            >
+              {editId ? 'Save Changes' : 'Publish Festival'}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* Festivals List */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm">
+        <h3 className="text-xl font-bold text-charcoal mb-4 flex items-center gap-2">
+          <Calendar size={22} className="text-saffron" />
+          पर्व सूची डेस्क / Festival List Desk
+        </h3>
+
+        {loading ? (
+          <div className="py-12 text-center">
+            <Loader size={32} className="animate-spin text-saffron mx-auto" />
+            <p className="text-xs text-gray-400 mt-2">Loading festivals...</p>
+          </div>
+        ) : festivals.length === 0 ? (
+          <div className="py-12 text-center text-gray-500 text-sm font-devanagari">कोई पर्व पंजीकृत नहीं है।</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 text-left">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Weight</th>
+                  <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Festival</th>
+                  <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Date</th>
+                  <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Associated Mission</th>
+                  <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase">Status</th>
+                  <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-150 text-sm">
+                {festivals.map((fest) => (
+                  <tr key={fest._id} className={actionLoadingId === fest._id ? 'opacity-40 pointer-events-none' : ''}>
+                    <td className="px-4 py-3.5 text-gray-500 font-mono font-bold">{fest.displayOrder}</td>
+                    <td className="px-4 py-3.5 font-bold text-charcoal font-devanagari">{fest.festivalName}</td>
+                    <td className="px-4 py-3.5 font-semibold text-gray-600">
+                      {new Date(fest.festivalDate).toLocaleDateString('hi-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </td>
+                    <td className="px-4 py-3.5 text-xs text-gray-500 font-devanagari leading-relaxed max-w-xs truncate">{fest.associatedMission}</td>
+                    <td className="px-4 py-3.5">
+                      <div className="flex flex-col gap-1.5">
+                        <button
+                          onClick={() => toggleStatus(fest)}
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase text-center border w-fit ${
+                            fest.status === 'active'
+                              ? 'bg-green-50 text-green-600 border-green-150 hover:bg-green-100/50'
+                              : 'bg-orange-50 text-orange-600 border-orange-150 hover:bg-orange-100/50'
+                          }`}
+                        >
+                          {fest.status}
+                        </button>
+                        <button
+                          onClick={() => togglePublish(fest)}
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase text-center border w-fit ${
+                            fest.isPublished
+                              ? 'bg-blue-50 text-blue-600 border-blue-150 hover:bg-blue-100/50'
+                              : 'bg-gray-100 text-gray-500 border-gray-250 hover:bg-gray-200/50'
+                          }`}
+                        >
+                          {fest.isPublished ? 'Published' : 'Hidden'}
+                        </button>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3.5 text-right space-x-1.5 whitespace-nowrap">
+                      <button
+                        onClick={() => handleEditClick(fest)}
+                        className="px-3 py-1 bg-amber-50 text-amber-700 border border-amber-100 rounded-lg hover:bg-amber-100/50 text-xs font-bold transition-all"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(fest._id)}
+                        className="px-3 py-1 bg-red-50 text-red-700 border border-red-100 rounded-lg hover:bg-red-100/50 text-xs font-bold transition-all"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>

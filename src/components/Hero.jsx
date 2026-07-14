@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import DonateButton from './shared/DonateButton';
 import { useTranslation } from '../i18n/LanguageContext';
 import Typewriter from './shared/Typewriter';
@@ -53,6 +54,7 @@ const announcements = [
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const translatedSlides = slides.map((slide, idx) => ({
     ...slide,
@@ -104,7 +106,11 @@ export default function Hero() {
                   {slides[currentSlide].buttonText === 'Donate Now' ? (
                     <DonateButton className="px-8 py-3 text-sm" />
                   ) : (
-                    <button className="bg-[#FF6A00] text-white px-8 py-3 rounded-full font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 text-sm uppercase tracking-wider btn-animated">
+                    <button
+                      type="button"
+                      onClick={() => navigate('/join-the-mission')}
+                      className="bg-[#FF6A00] text-white px-8 py-3 rounded-full font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 text-sm uppercase tracking-wider btn-animated"
+                    >
                       {slides[currentSlide].buttonText}
                     </button>
                   )}

@@ -77,9 +77,9 @@ export default function VolunteerEcosystem({ onCardClick, hideHeader = false }) 
 
   const handleCardClick = (slide) => {
     if (onCardClick) {
-      onCardClick(slide.key);
+      onCardClick(slide.categoryParam);
     } else {
-      navigate(`/join-the-mission?category=${slide.categoryParam}`);
+      navigate(`/join-the-mission/${slide.categoryParam}`);
     }
   };
 

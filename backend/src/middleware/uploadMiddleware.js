@@ -12,6 +12,8 @@ const storage = multer.diskStorage({
       dest = 'uploads/photos/';
     } else if (file.fieldname === 'idProof') {
       dest = 'uploads/id_proofs/';
+    } else if (['aadhaarFront', 'aadhaarBack', 'selfie'].includes(file.fieldname)) {
+      dest = 'uploads/membership/identity/';
     }
     // Ensure destination directory exists
     if (!fs.existsSync(dest)) {

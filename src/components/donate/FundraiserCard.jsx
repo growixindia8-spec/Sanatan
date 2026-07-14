@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function FundraiserCard({ camp }) {
   const formatCurrency = (num) => {
@@ -10,7 +11,7 @@ export default function FundraiserCard({ camp }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden flex flex-col">
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300">
       <div 
         className="relative h-48 bg-gray-200 bg-cover bg-center" 
         style={{ backgroundImage: `url(${camp.image})` }}
@@ -37,9 +38,12 @@ export default function FundraiserCard({ camp }) {
             <span className="font-medium text-maroon">{camp.taxSaved}</span>
           </div>
           
-          <button className="w-full bg-saffron text-white py-3 rounded-full font-bold hover:bg-orange-600 transition-colors">
+          <Link 
+            to={`/donate?campaign=${encodeURIComponent(camp.title)}`}
+            className="block w-full text-center bg-saffron text-white py-3 rounded-full font-bold hover:bg-orange-600 transition-colors"
+          >
             Donate
-          </button>
+          </Link>
         </div>
       </div>
     </div>

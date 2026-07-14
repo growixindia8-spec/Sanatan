@@ -1,7 +1,11 @@
+import annadanamImg from '../assets/fundraiser_annadanam.png';
+import educationImg from '../assets/fundraiser_education.png';
+import healthcareImg from '../assets/fundraiser_healthcare.png';
+
 export const campaigns = [
-  { cat: "Annadanam", title: "Feed 10,000 families across Varanasi", raised: 225000, goal: 500000, donors: 124, taxSaved: "50% Tax Saved · 80G", progress: 45, image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80" },
-  { cat: "Education", title: "Send 500 girls back to school in rural Bihar", raised: 150000, goal: 300000, donors: 89, taxSaved: "50% Tax Saved · 80G", progress: 50, image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80" },
-  { cat: "Healthcare", title: "Free medical camps in 40 tribal villages of Odisha", raised: 400000, goal: 1000000, donors: 215, taxSaved: "50% Tax Saved · 80G", progress: 40, image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80" },
+  { cat: "Annadanam", title: "Feed 10,000 families across Varanasi", raised: 225000, goal: 500000, donors: 124, taxSaved: "50% Tax Saved · 80G", progress: 45, image: annadanamImg },
+  { cat: "Education", title: "Send 500 girls back to school in rural Bihar", raised: 150000, goal: 300000, donors: 89, taxSaved: "50% Tax Saved · 80G", progress: 50, image: educationImg },
+  { cat: "Healthcare", title: "Free medical camps in 40 tribal villages of Odisha", raised: 400000, goal: 1000000, donors: 215, taxSaved: "50% Tax Saved · 80G", progress: 40, image: healthcareImg },
   { cat: "Dharma Seva", title: "Restoration of 800-year old Shri Hanuman Mandir Rajasthan", raised: 750000, goal: 1500000, donors: 430, taxSaved: "50% Tax Saved · 80G", progress: 50, image: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&q=80" },
   { cat: "Gaushala", title: "Shelter & care for 1,200 rescued cows at Mathura Gaushala", raised: 110000, goal: 200000, donors: 95, taxSaved: "50% Tax Saved · 80G", progress: 55, image: "https://images.unsplash.com/photo-1595054225883-933e4f3066d5?auto=format&fit=crop&q=80" },
   { cat: "Vedic Education", title: "Sponsor 100 students at traditional Gurukul Haridwar", raised: 300000, goal: 600000, donors: 150, taxSaved: "50% Tax Saved · 80G", progress: 50, image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80" }

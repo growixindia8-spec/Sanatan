@@ -1,12 +1,40 @@
 import React, { useState } from 'react';
 import { ShieldCheck, KeyRound } from 'lucide-react';
+import { api } from "../../lib/apiClient";
 
-export default function OtpVerifyCard({ onVerify }) {
+export default function OtpVerifyCard({ mobile, purpose = "donation", onVerify }) {
   const [otp, setOtp] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(otp.length >= 4) onVerify(otp);
+    if (loading) return;
+    setError('');
+
+    if (!mobile) {
+      setError('Mobile number is missing.');
+      return;
+    }
+
+    if (otp.length !== 6) {
+      setError('Please enter exactly 6-digit OTP.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const data = await api.verifyOtp(mobile, otp, purpose);
+      if (data.success) {
+        onVerify(otp, data.tempToken);
+      } else {
+        setError('Invalid OTP. Please try again.');
+      }
+    } catch (err) {
+      setError(err.message || 'Verification failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -29,8 +57,14 @@ export default function OtpVerifyCard({ onVerify }) {
         </div>
 
         <p className="text-gray-500 text-sm text-center mb-8">
-          Enter the one-time password sent to your mobile number.
+          Enter the one-time password sent to +91 {mobile || 'your phone'}.
         </p>
+
+        {error && (
+          <div className="mb-6 p-3 bg-red-50 text-red-600 text-sm text-center rounded-lg border border-red-100 font-semibold">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -44,20 +78,22 @@ export default function OtpVerifyCard({ onVerify }) {
               <input
                 type="text"
                 value={otp}
-                onChange={(e) => setOtp(e.target.value)}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FF6A00] focus:border-transparent text-charcoal font-bold text-center tracking-widest text-lg transition-shadow"
-                placeholder="••••"
+                placeholder="••••••"
                 maxLength={6}
                 required
+                disabled={loading}
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full bg-[#FF6A00] text-white font-bold py-3.5 rounded-xl hover:bg-orange-600 transition-colors shadow-md shadow-orange-500/20 active:scale-[0.98]"
+            disabled={loading}
+            className="w-full bg-[#FF6A00] text-white font-bold py-3.5 rounded-xl hover:bg-orange-600 transition-colors shadow-md shadow-orange-500/20 active:scale-[0.98] disabled:opacity-50"
           >
-            Verify & Continue
+            {loading ? "Verifying..." : "Verify & Continue"}
           </button>
         </form>
       </div>
