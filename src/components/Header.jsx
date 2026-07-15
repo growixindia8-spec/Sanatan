@@ -91,11 +91,22 @@ export default function Header() {
     {
       name: 'PORTAL',
       items: isAuthenticated ? [
-        { name: `Hello, ${user?.fullName || 'User'}`, path: portalUrl },
-        { name: 'My Profile', path: portalUrl },
-        { name: 'Sign Out', path: '#', action: 'logout' }
+        { name: `👋 ${user?.fullName || 'User'}`, path: '/portal?tab=profile' },
+        { name: 'Dashboard', path: '/portal?tab=dashboard' },
+        { name: 'My Profile', path: '/portal?tab=profile' },
+        { name: 'My Membership', path: '/portal?tab=membership' },
+        { name: 'My Donations', path: '/portal?tab=donations' },
+        { name: 'My Fundraisers', path: '/portal?tab=fundraisers' },
+        { name: 'Receipts & Certificates', path: '/portal?tab=receipts' },
+        { name: 'Notifications', path: '/portal?tab=notifications' },
+        { name: 'Verification Center', path: '/portal?tab=verification' },
+        { name: 'Logout', path: '#', action: 'logout' }
       ] : [
-        { name: 'Login / Register', path: portalUrl }
+        { name: 'Login / Register', path: '/portal/login' },
+        { name: 'Become a Member', path: '/join-the-mission' },
+        { name: 'Start Fundraiser', path: '/donate/start-fundraiser' },
+        { name: 'Verification Center', path: '/portal?tab=verification' },
+        { name: 'CSR Partnership', path: '/partners/csr' }
       ]
     },
     {

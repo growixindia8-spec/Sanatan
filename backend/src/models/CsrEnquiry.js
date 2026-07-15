@@ -22,6 +22,12 @@ const csrEnquirySchema = new mongoose.Schema({
   proposal: { type: String },
   // Need info fields
   query: { type: String },
+  status: { type: String, enum: ['new', 'contacted', 'meeting-scheduled', 'proposal-sent', 'in-negotiation', 'approved', 'closed', 'not-interested'], default: 'new' },
+  notes: [{
+    text: { type: String, required: true },
+    author: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+  }],
   createdAt: { type: Date, default: Date.now }
 });
 

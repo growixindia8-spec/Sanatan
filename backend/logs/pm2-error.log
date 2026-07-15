@@ -40,3 +40,310 @@
 2026-07-14 15:22:02:     at listOnTimeout (node:internal/timers:605:17)
 2026-07-14 15:22:02:     at process.processTimers (node:internal/timers:541:7)
 2026-07-14 18:14:39: MongoDB is offline. Saving OTP session in-memory.
+2026-07-14 19:10:58: MongoDB is offline. Saving donation in-memory.
+2026-07-15 09:57:44: Database connection error: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/
+2026-07-15 09:57:44: Backend server is running in offline database fallback mode.
+2026-07-15 10:03:38: MongooseError: Operation `festivals.find()` buffering timed out after 10000ms
+2026-07-15 10:03:38:     at Timeout.<anonymous> (C:\Users\hp\Desktop\Sanatan\backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+2026-07-15 10:03:38:     at listOnTimeout (node:internal/timers:605:17)
+2026-07-15 10:03:38:     at process.processTimers (node:internal/timers:541:7)
+2026-07-15 10:03:48: MongooseError: Operation `festivals.find()` buffering timed out after 10000ms
+2026-07-15 10:03:48:     at Timeout.<anonymous> (C:\Users\hp\Desktop\Sanatan\backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+2026-07-15 10:03:48:     at listOnTimeout (node:internal/timers:605:17)
+2026-07-15 10:03:48:     at process.processTimers (node:internal/timers:541:7)
+2026-07-15 10:11:32: MongooseError: Operation `festivals.find()` buffering timed out after 10000ms
+2026-07-15 10:11:32:     at Timeout.<anonymous> (C:\Users\hp\Desktop\Sanatan\backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+2026-07-15 10:11:32:     at listOnTimeout (node:internal/timers:605:17)
+2026-07-15 10:11:32:     at process.processTimers (node:internal/timers:541:7)
+2026-07-15 10:11:42: MongooseError: Operation `festivals.find()` buffering timed out after 10000ms
+2026-07-15 10:11:42:     at Timeout.<anonymous> (C:\Users\hp\Desktop\Sanatan\backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+2026-07-15 10:11:42:     at listOnTimeout (node:internal/timers:605:17)
+2026-07-15 10:11:42:     at process.processTimers (node:internal/timers:541:7)
+2026-07-15 10:14:07: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+2026-07-15 10:14:07:     at Timeout.<anonymous> (C:\Users\hp\Desktop\Sanatan\backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+2026-07-15 10:14:07:     at listOnTimeout (node:internal/timers:605:17)
+2026-07-15 10:14:07:     at process.processTimers (node:internal/timers:541:7)
+2026-07-15 11:38:52: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+2026-07-15 11:38:52:     at Timeout.<anonymous> (C:\Users\hp\Desktop\Sanatan\backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:187:23)
+2026-07-15 11:38:52:     at listOnTimeout (node:internal/timers:605:17)
+2026-07-15 11:38:52:     at process.processTimers (node:internal/timers:541:7)
+2026-07-15 11:54:45: MongoServerError: E11000 duplicate key error collection: sanatan-foundation.memberships index: memberId_1 dup key: { memberId: null }
+2026-07-15 11:54:45:     at InsertOneOperation.handleOk (C:\Users\hp\Desktop\Sanatan\backend\node_modules\mongodb\src\operations\insert.ts:79:13)
+2026-07-15 11:54:45:     at tryOperation (C:\Users\hp\Desktop\Sanatan\backend\node_modules\mongodb\src\operations\execute_operation.ts:290:26)
+2026-07-15 11:54:45:     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-07-15 11:54:45:     at async executeOperation (C:\Users\hp\Desktop\Sanatan\backend\node_modules\mongodb\src\operations\execute_operation.ts:119:12)
+2026-07-15 11:54:45:     at async Collection.insertOne (C:\Users\hp\Desktop\Sanatan\backend\node_modules\mongodb\src\collection.ts:294:12)
+2026-07-15 12:49:50: Error: CORS blocked origin: http://localhost:5175
+2026-07-15 12:49:50:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 12:49:50:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 12:49:50:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 12:49:50:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 12:49:50:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 12:49:50:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 12:49:50:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 12:49:50:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 12:49:50:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 12:49:50:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 12:49:50: Error: CORS blocked origin: http://localhost:5175
+2026-07-15 12:49:50:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 12:49:50:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 12:49:50:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 12:49:50:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 12:49:50:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 12:49:50:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 12:49:50:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 12:49:50:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 12:49:50:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 12:49:50:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 12:50:34: Error: CORS blocked origin: http://localhost:5175
+2026-07-15 12:50:34:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 12:50:34:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 12:50:34:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 12:50:34:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 12:50:34:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 12:50:34:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 12:50:34:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 12:50:34:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 12:50:34:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 12:50:34:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 12:51:55: Error: CORS blocked origin: http://localhost:5175
+2026-07-15 12:51:55:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 12:51:55:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 12:51:55:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 12:51:55:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 12:51:55:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 12:51:55:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 12:51:55:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 12:51:55:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 12:51:55:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 12:51:55:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 12:51:57: Error: CORS blocked origin: http://localhost:5175
+2026-07-15 12:51:57:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 12:51:57:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 12:51:57:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 12:51:57:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 12:51:57:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 12:51:57:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 12:51:57:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 12:51:57:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 12:51:57:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 12:51:57:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 12:51:58: Error: CORS blocked origin: http://localhost:5175
+2026-07-15 12:51:58:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 12:51:58:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 12:51:58:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 12:51:58:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 12:51:58:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 12:51:58:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 12:51:58:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 12:51:58:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 12:51:58:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 12:51:58:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 12:57:01: Error: CORS blocked origin: http://localhost:5176
+2026-07-15 12:57:01:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 12:57:01:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 12:57:01:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 12:57:01:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 12:57:01:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 12:57:01:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 12:57:01:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 12:57:01:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 12:57:01:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 12:57:01:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 12:57:01: Error: CORS blocked origin: http://localhost:5176
+2026-07-15 12:57:01:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 12:57:01:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 12:57:01:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 12:57:01:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 12:57:01:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 12:57:01:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 12:57:01:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 12:57:01:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 12:57:01:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 12:57:01:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 12:57:37: Error: CORS blocked origin: http://localhost:5176
+2026-07-15 12:57:37:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 12:57:37:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 12:57:37:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 12:57:37:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 12:57:37:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 12:57:37:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 12:57:37:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 12:57:37:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 12:57:37:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 12:57:37:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 13:59:34: Error: CORS blocked origin: http://localhost:5176
+2026-07-15 13:59:34:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 13:59:34:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 13:59:34:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 13:59:34:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 13:59:34:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 13:59:34:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 13:59:34:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 13:59:34:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 13:59:34:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 13:59:34:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 13:59:36: Error: CORS blocked origin: http://localhost:5176
+2026-07-15 13:59:36:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 13:59:36:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 13:59:36:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 13:59:36:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 13:59:36:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 13:59:36:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 13:59:36:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 13:59:36:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 13:59:36:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 13:59:36:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 13:59:36: Error: CORS blocked origin: http://localhost:5176
+2026-07-15 13:59:36:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:56:21)
+2026-07-15 13:59:36:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 13:59:36:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 13:59:36:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 13:59:36:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 13:59:36:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 13:59:36:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 13:59:36:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 13:59:36:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 13:59:36:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 14:07:42: Database connection error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:07:42: Server startup failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:08:04: Database connection error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:08:04: Server startup failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:08:13: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:08:22: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:08:32: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:08:44: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:08:53: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:09:00: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:09:08: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:09:16: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:09:24: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:09:32: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:09:40: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:09:47: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:09:56: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:10:04: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:10:14: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:10:22: FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.
+2026-07-15 14:10:28: Database connection error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:10:28: Server startup failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:10:36: Database connection error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:10:36: Server startup failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:10:43: Database connection error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:10:43: Server startup failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:10:51: Database connection error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:10:51: Server startup failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:10:59: Database connection error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:10:59: Server startup failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:11:07: Database connection error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:11:07: Server startup failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.pryutjv.mongodb.net
+2026-07-15 14:18:45: Error: CORS blocked origin: http://localhost:5175
+2026-07-15 14:18:45:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:55:21)
+2026-07-15 14:18:45:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 14:18:45:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 14:18:45:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 14:18:45:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 14:18:45:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 14:18:45:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 14:18:45:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 14:18:45:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 14:18:45:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 14:18:45: Error: CORS blocked origin: http://localhost:5175
+2026-07-15 14:18:45:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:55:21)
+2026-07-15 14:18:45:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 14:18:45:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 14:18:45:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 14:18:45:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 14:18:45:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 14:18:45:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 14:18:45:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 14:18:45:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 14:18:45:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 14:20:28: Error: CORS blocked origin: http://localhost:5175
+2026-07-15 14:20:28:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:55:21)
+2026-07-15 14:20:28:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 14:20:28:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 14:20:28:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 14:20:28:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 14:20:28:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 14:20:28:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 14:20:28:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 14:20:28:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 14:20:28:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 14:20:28: Error: CORS blocked origin: http://localhost:5175
+2026-07-15 14:20:28:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:55:21)
+2026-07-15 14:20:28:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 14:20:28:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 14:20:28:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 14:20:28:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 14:20:28:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 14:20:28:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 14:20:28:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 14:20:28:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 14:20:28:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 14:21:00: Error: CORS blocked origin: http://localhost:5175
+2026-07-15 14:21:00:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:55:21)
+2026-07-15 14:21:00:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 14:21:00:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 14:21:00:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 14:21:00:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 14:21:00:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 14:21:00:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 14:21:00:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 14:21:00:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 14:21:00:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 15:36:22: JsonWebTokenError: invalid signature
+2026-07-15 15:36:22:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\jsonwebtoken\verify.js:171:19
+2026-07-15 15:36:22:     at getSecret (C:\Users\hp\Desktop\Sanatan\backend\node_modules\jsonwebtoken\verify.js:97:14)
+2026-07-15 15:36:22:     at module.exports [as verify] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\jsonwebtoken\verify.js:101:10)
+2026-07-15 15:36:22:     at protect (C:\Users\hp\Desktop\Sanatan\backend\src\middleware\authMiddleware.js:13:27)
+2026-07-15 15:36:22:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 15:36:22:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\route.js:149:13)
+2026-07-15 15:36:22:     at Route.dispatch (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\route.js:119:3)
+2026-07-15 15:36:22:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 15:36:22:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:284:15
+2026-07-15 15:36:22:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 15:36:22: JsonWebTokenError: invalid signature
+2026-07-15 15:36:22:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\jsonwebtoken\verify.js:171:19
+2026-07-15 15:36:22:     at getSecret (C:\Users\hp\Desktop\Sanatan\backend\node_modules\jsonwebtoken\verify.js:97:14)
+2026-07-15 15:36:22:     at module.exports [as verify] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\jsonwebtoken\verify.js:101:10)
+2026-07-15 15:36:22:     at protect (C:\Users\hp\Desktop\Sanatan\backend\src\middleware\authMiddleware.js:13:27)
+2026-07-15 15:36:22:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 15:36:22:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\route.js:149:13)
+2026-07-15 15:36:22:     at Route.dispatch (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\route.js:119:3)
+2026-07-15 15:36:22:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 15:36:22:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:284:15
+2026-07-15 15:36:22:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 15:52:06: Error: CORS blocked origin: http://localhost:5176
+2026-07-15 15:52:06:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:55:21)
+2026-07-15 15:52:06:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 15:52:06:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 15:52:06:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 15:52:06:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 15:52:06:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 15:52:06:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 15:52:06:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 15:52:06:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 15:52:06:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 15:52:06: Error: CORS blocked origin: http://localhost:5176
+2026-07-15 15:52:06:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:55:21)
+2026-07-15 15:52:06:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 15:52:06:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 15:52:06:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 15:52:06:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 15:52:06:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 15:52:06:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 15:52:06:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 15:52:06:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 15:52:06:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)
+2026-07-15 15:52:26: Error: CORS blocked origin: http://localhost:5176
+2026-07-15 15:52:26:     at origin (C:\Users\hp\Desktop\Sanatan\backend\server.js:55:21)
+2026-07-15 15:52:26:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:219:13
+2026-07-15 15:52:26:     at optionsCallback (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:199:9)
+2026-07-15 15:52:26:     at corsMiddleware (C:\Users\hp\Desktop\Sanatan\backend\node_modules\cors\lib\index.js:204:7)
+2026-07-15 15:52:26:     at Layer.handle [as handle_request] (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\layer.js:95:5)
+2026-07-15 15:52:26:     at trim_prefix (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:328:13)
+2026-07-15 15:52:26:     at C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:286:9
+2026-07-15 15:52:26:     at router.process_params (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:346:12)
+2026-07-15 15:52:26:     at next (C:\Users\hp\Desktop\Sanatan\backend\node_modules\express\lib\router\index.js:280:10)
+2026-07-15 15:52:26:     at internalNext (C:\Users\hp\Desktop\Sanatan\backend\node_modules\helmet\index.cjs:558:6)

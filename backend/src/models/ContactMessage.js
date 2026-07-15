@@ -6,6 +6,12 @@ const contactMessageSchema = new mongoose.Schema({
   mobile: { type: String, required: true },
   subject: { type: String, required: true },
   message: { type: String, required: true },
+  status: { type: String, enum: ['new', 'read', 'replied', 'closed', 'spam'], default: 'new' },
+  notes: [{
+    text: { type: String, required: true },
+    author: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+  }],
   createdAt: { type: Date, default: Date.now }
 });
 

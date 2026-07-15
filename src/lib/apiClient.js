@@ -15,7 +15,7 @@ async function request(endpoint, options = {}) {
     res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
   } catch (netErr) {
     console.error("Network connection error in apiClient:", netErr);
-    throw new Error("Backend server is not running on port 5000.");
+    throw new Error("सेवा फिलहाल उपलब्ध नहीं है। कृपया कुछ समय बाद पुनः प्रयास करें।");
   }
   
   let data;
@@ -80,4 +80,18 @@ export const api = {
   adminUpdateFestival: (id, data) => request(`/api/admin/festivals/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   adminDeleteFestival: (id) => request(`/api/admin/festivals/${id}`, { method: "DELETE" }),
   adminPatchFestivalStatus: (id, status) => request(`/api/admin/festivals/${id}/status`, { method: "PATCH", body: JSON.stringify({ status }) }),
+  
+  // Contact Enquiry submit
+  submitContact: (data) =>
+    request("/api/contact/send", { method: "POST", body: JSON.stringify(data) }),
+
+  // CSR Enquiry submit
+  submitCsrEnquiry: (data) =>
+    request("/api/csr/enquiry", { method: "POST", body: JSON.stringify(data) }),
+
+  // Portal — Member data
+  getMyDonations: () => request("/api/portal/my-donations"),
+  getMyFundraisers: () => request("/api/portal/my-fundraisers"),
+  getMyReceipts: () => request("/api/portal/my-receipts"),
 };
+

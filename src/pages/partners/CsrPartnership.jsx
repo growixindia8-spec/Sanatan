@@ -44,16 +44,16 @@ export default function CsrPartnership() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a 
-                href="#" 
+              <Link 
+                to="/csr-profile" 
                 className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-3.5 bg-black text-white rounded-full font-bold hover:bg-gray-900 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-sm uppercase tracking-wider"
               >
                 <Download className="w-4 h-4 mr-2" />
-                Download CSR Profile
-              </a>
+                View CSR Profile
+              </Link>
               
               <a 
-                href="tel:#" 
+                href="tel:+918888888888" 
                 className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-3.5 bg-white text-[#FF6A00] border-2 border-[#FF6A00] rounded-full font-bold hover:bg-orange-50 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 text-sm uppercase tracking-wider"
               >
                 <Phone className="w-4 h-4 mr-2" />

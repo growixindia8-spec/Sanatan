@@ -49,12 +49,36 @@ export default function About() {
 
   // Inspirations list
   const inspirations = [
-    { name: "स्वामी विवेकानंद (Swami Vivekananda)", desc: "युवा चेतना, अध्यात्म और भारतीय संस्कृति के प्रतीक", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400" },
-    { name: "छत्रपति शिवाजी महाराज (Shivaji Maharaj)", desc: "राष्ट्रधर्म, स्वराज्य और स्वाभिमान के अद्वितीय प्रतीक", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400" },
-    { name: "महाराणा प्रताप (Maharana Pratap)", desc: "अदम्य साहस, स्वतंत्रता और स्वाभिमान के पर्याय", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400" },
-    { name: "आदि शंकराचार्य (Adi Shankaracharya)", desc: "सनातन धर्म के पुनरुद्धारक और ज्ञान के पुंज", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400" },
-    { name: "स्वामी दयानंद सरस्वती (Dayanand Saraswati)", desc: "वैदिक संस्कृति के संवाहक एवं समाज सुधारक", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400" },
-    { name: "मदन मोहन मालवीय (Madan Mohan Malaviya)", desc: "शिक्षा, राष्ट्रसेवा और सनातन संस्कृति के पोषक", photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=400" }
+    {
+      name: "स्वामी विवेकानंद (Swami Vivekananda)",
+      desc: "युवा चेतना, अध्यात्म और भारतीय संस्कृति के प्रतीक",
+      photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Vivekananda_Chicago_Address.jpg/480px-Vivekananda_Chicago_Address.jpg"
+    },
+    {
+      name: "छत्रपति शिवाजी महाराज (Shivaji Maharaj)",
+      desc: "राष्ट्रधर्म, स्वराज्य और स्वाभिमान के अद्वितीय प्रतीक",
+      photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Shivaji_BritishMuseum.jpg/480px-Shivaji_BritishMuseum.jpg"
+    },
+    {
+      name: "महाराणा प्रताप (Maharana Pratap)",
+      desc: "अदम्य साहस, स्वतंत्रता और स्वाभिमान के पर्याय",
+      photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Maharana_Pratap.jpg/480px-Maharana_Pratap.jpg"
+    },
+    {
+      name: "आदि शंकराचार्य (Adi Shankaracharya)",
+      desc: "सनातन धर्म के पुनरुद्धारक और ज्ञान के पुंज",
+      photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Adi_Shankaracharya_2.jpg/480px-Adi_Shankaracharya_2.jpg"
+    },
+    {
+      name: "स्वामी दयानंद सरस्वती (Dayanand Saraswati)",
+      desc: "वैदिक संस्कृति के संवाहक एवं समाज सुधारक",
+      photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Swami_Dayananda_Saraswati_portrait.jpg/480px-Swami_Dayananda_Saraswati_portrait.jpg"
+    },
+    {
+      name: "मदन मोहन मालवीय (Madan Mohan Malaviya)",
+      desc: "शिक्षा, राष्ट्रसेवा और सनातन संस्कृति के पोषक",
+      photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Madan_Mohan_Malaviya.jpg/480px-Madan_Mohan_Malaviya.jpg"
+    }
   ];
 
   // Financial transparency items
@@ -148,6 +172,7 @@ export default function About() {
   const [otpVerified, setOtpVerified] = useState(false);
   const [authError, setAuthError] = useState('');
   const [serverTestOtp, setServerTestOtp] = useState('');
+  const [isTestMode, setIsTestMode] = useState(false);
 
   const openCertModal = (cert) => {
     setSelectedCert(cert);
@@ -157,6 +182,7 @@ export default function About() {
     setOtpVerified(false);
     setAuthError('');
     setServerTestOtp('');
+    setIsTestMode(false);
     setIsOtpModalOpen(true);
   };
 
@@ -170,9 +196,11 @@ export default function About() {
     try {
       const res = await api.sendOtp(phoneNumber, 'certificate-verification');
       setOtpSent(true);
-      if (res.testOtp) {
-        setServerTestOtp(res.testOtp);
+      if (res.testMode === true) {
+        setIsTestMode(true);
+        setServerTestOtp(res.testOtp || '123456');
       } else {
+        setIsTestMode(false);
         setServerTestOtp('');
       }
     } catch (err) {
@@ -434,10 +462,10 @@ export default function About() {
               <div className="flex flex-col items-center flex-shrink-0">
                 <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-double border-saffron mb-3 shadow-md">
                   <img
-                    src="	https://sana
-                    .0andharmmanavkalyanfoundation.org/__l5…2bd14313-f5ae-4bf8-ac7e-16c969234eff/founder.jpeg"
-                    alt="Sanjay A Singh"
-                    className="w-full h-full object-cover"
+                    src="https://sanatandharmmanavkalyanfoundation.org/founder.jpeg"
+                    alt="Sanjay A Singh — Founder"
+                    className="w-full h-full object-cover object-top"
+                    onError={(e) => { e.target.src = 'https://ui-avatars.com/api/?name=Sanjay+Singh&background=FF6A00&color=fff&size=256'; }}
                   />
                 </div>
                 <h4 className="font-bold text-charcoal text-lg text-center leading-tight">Sanjay A Singh</h4>
@@ -492,9 +520,10 @@ export default function About() {
               <div className="flex flex-col items-center flex-shrink-0">
                 <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-double border-saffron mb-3 shadow-md">
                   <img
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400"
-                    alt="Krishnam Singh"
-                    className="w-full h-full object-cover"
+                    src="https://ui-avatars.com/api/?name=Krishnam+Singh&background=FF6A00&color=fff&size=256"
+                    alt="Krishnam Singh — Co-Founder"
+                    className="w-full h-full object-cover object-top"
+                    onError={(e) => { e.target.src = 'https://ui-avatars.com/api/?name=Krishnam+Singh&background=FF6A00&color=fff&size=256'; }}
                   />
                 </div>
                 <h4 className="font-bold text-charcoal text-lg text-center leading-tight">Krishnam Singh</h4>
@@ -569,11 +598,15 @@ export default function About() {
                 className="bg-white rounded-xl overflow-hidden shadow-sm border border-saffron/10 hover:border-saffron/40 hover:shadow-md transition-all duration-300 flex flex-col group"
               >
                 {/* Card Image Wrapper */}
-                <div className="aspect-[3/4] w-full overflow-hidden relative bg-gray-100">
+                <div className="aspect-[3/4] w-full overflow-hidden relative bg-gradient-to-b from-amber-50 to-orange-100">
                   <img
                     src={item.photo}
                     alt={item.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.parentElement.classList.add('flex', 'items-center', 'justify-center');
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
                 </div>
@@ -1310,13 +1343,13 @@ export default function About() {
                             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-center text-lg font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-saffron"
                             required
                           />
-                          {!import.meta.env.PROD && serverTestOtp ? (
+                          {isTestMode && serverTestOtp ? (
                             <div className="bg-orange-50 border border-orange-200 text-orange-900 px-4 py-2 rounded-lg text-center text-xs font-bold font-mono my-2">
                               🔧 Test Mode OTP: {serverTestOtp}
                             </div>
                           ) : (
                             <p className="text-[10px] text-gray-400 mt-2 text-center">
-                              * Enter the verification OTP code sent to your phone.
+                              * OTP आपके मोबाइल नंबर पर भेजा गया है।
                             </p>
                           )}
                         </div>

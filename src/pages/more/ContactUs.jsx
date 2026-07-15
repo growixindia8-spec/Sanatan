@@ -1,9 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { Phone, Mail, MapPin } from 'lucide-react';
+import { api } from '../../lib/apiClient';
 
 export default function ContactUs() {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setSuccessMsg("");
+    setErrorMsg("");
+
+    if (!/^[6-9]\d{9}$/.test(mobile)) {
+      setErrorMsg("Please enter a valid 10-digit Indian mobile number.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await api.submitContact({ fullName, email, mobile, subject, message });
+      if (res.success) {
+        setSuccessMsg(res.message || "Your message has been sent successfully!");
+        setFullName("");
+        setEmail("");
+        setMobile("");
+        setSubject("");
+        setMessage("");
+      } else {
+        setErrorMsg(res.message || "Failed to submit message.");
+      }
+    } catch (err) {
+      setErrorMsg(err.message || "An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col font-sans bg-gray-50">
       <Header />
@@ -47,27 +88,85 @@ export default function ContactUs() {
             {/* Contact Form */}
             <div className="lg:w-2/3 bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
               <h2 className="text-2xl font-bold text-charcoal mb-6">Send a Message</h2>
-              <form className="space-y-6">
+              
+              {successMsg && (
+                <div className="mb-6 p-4 bg-green-50 text-green-700 text-sm font-semibold rounded-xl border border-green-200">
+                  {successMsg}
+                </div>
+              )}
+              {errorMsg && (
+                <div className="mb-6 p-4 bg-red-50 text-red-650 text-red-600 text-sm font-semibold rounded-xl border border-red-200">
+                  {errorMsg}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
-                    <input type="text" className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-saffron" placeholder="Your Name" />
+                    <input
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-saffron"
+                      placeholder="Your Name"
+                      required
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
-                    <input type="email" className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-saffron" placeholder="Your Email" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-saffron"
+                      placeholder="Your Email"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Mobile Number</label>
+                    <input
+                      type="tel"
+                      value={mobile}
+                      onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                      maxLength={10}
+                      className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-saffron"
+                      placeholder="Your 10-Digit Mobile"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Subject</label>
+                    <input
+                      type="text"
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
+                      className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-saffron"
+                      placeholder="How can we help?"
+                      required
+                    />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Subject</label>
-                  <input type="text" className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-saffron" placeholder="How can we help?" />
-                </div>
-                <div>
                   <label className="block text-sm font-bold text-gray-700 mb-1">Message</label>
-                  <textarea rows="6" className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-saffron" placeholder="Write your message here..."></textarea>
+                  <textarea
+                    rows="6"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-saffron"
+                    placeholder="Write your message here..."
+                    required
+                  />
                 </div>
-                <button type="button" className="bg-[#FF6A00] text-white px-8 py-3 rounded-full font-bold hover:bg-orange-600 transition-all btn-animated">
-                  Send Message
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-[#FF6A00] text-white px-8 py-3 rounded-full font-bold hover:bg-orange-600 transition-all btn-animated disabled:opacity-50"
+                >
+                  {loading ? "Sending..." : "Send Message"}
                 </button>
               </form>
             </div>

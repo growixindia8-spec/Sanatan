@@ -23,6 +23,11 @@ import {
   Lock,
   Calendar
 } from 'lucide-react';
+
+import MyMembershipPanel from '../components/portal/MyMembershipPanel';
+import MyDonationsPanel from '../components/portal/MyDonationsPanel';
+import MyFundraisersPanel from '../components/portal/MyFundraisersPanel';
+import MyReceiptsPanel from '../components/portal/MyReceiptsPanel';
 export default function Portal() {
   const { user, error, login, logout, isAuthenticated } = usePortalAuth();
   const isManagementRole = user?.role === 'coordinator' || user?.role === 'admin';
@@ -166,17 +171,7 @@ export default function Portal() {
                   >
                     <Search size={18} /> Verify Member
                   </button>
-                  <button 
-                    onClick={() => setActiveTab('financial-reports')}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm ${
-                      activeTab === 'financial-reports' 
-                        ? 'bg-orange-50 text-[#FF6A00]' 
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-charcoal'
-                    }`}
-                  >
-                    <FileText size={18} /> Financial Reports
-                  </button>
-                  <button 
+                  <button
                     onClick={() => setActiveTab('notifications')}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm ${
                       activeTab === 'notifications' 
@@ -210,6 +205,58 @@ export default function Portal() {
               >
                 <User size={18} /> My Profile
               </button>
+              <button 
+                onClick={() => setActiveTab('membership')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm ${
+                  activeTab === 'membership' 
+                    ? 'bg-orange-50 text-[#FF6A00]' 
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-charcoal'
+                }`}
+              >
+                <ClipboardList size={18} /> My Membership
+              </button>
+              <button 
+                onClick={() => setActiveTab('donations')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm ${
+                  activeTab === 'donations' 
+                    ? 'bg-orange-50 text-[#FF6A00]' 
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-charcoal'
+                }`}
+              >
+                <FileText size={18} /> My Donations
+              </button>
+              <button 
+                onClick={() => setActiveTab('fundraisers')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm ${
+                  activeTab === 'fundraisers' 
+                    ? 'bg-orange-50 text-[#FF6A00]' 
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-charcoal'
+                }`}
+              >
+                <UploadCloud size={18} /> My Fundraisers
+              </button>
+              <button 
+                onClick={() => setActiveTab('receipts')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm ${
+                  activeTab === 'receipts' 
+                    ? 'bg-orange-50 text-[#FF6A00]' 
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-charcoal'
+                }`}
+              >
+                <Check size={18} /> Receipts & Certificates
+              </button>
+              {!isManagementRole && (
+                <button 
+                  onClick={() => setActiveTab('notifications')}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm ${
+                    activeTab === 'notifications' 
+                      ? 'bg-orange-50 text-[#FF6A00]' 
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-charcoal'
+                  }`}
+                >
+                  <Bell size={18} /> Notifications
+                </button>
+              )}
               <div className="pt-4 border-t border-gray-100 mt-4">
                 <button 
                   onClick={logout}
@@ -226,10 +273,13 @@ export default function Portal() {
           {activeTab === 'dashboard' && <DashboardPanel logout={logout} />}
           {activeTab === 'memberships' && <MembershipsPanel />}
           {activeTab === 'verify-member' && <VerifyMembershipPanel />}
-          {activeTab === 'financial-reports' && <AddFinancialReportPanel />}
           {activeTab === 'notifications' && <NotificationsPanel />}
           {activeTab === 'festivals' && <FestivalsPanel />}
           {activeTab === 'profile' && <MyProfilePanel />}
+          {activeTab === 'membership' && <MyMembershipPanel />}
+          {activeTab === 'donations' && <MyDonationsPanel />}
+          {activeTab === 'fundraisers' && <MyFundraisersPanel />}
+          {activeTab === 'receipts' && <MyReceiptsPanel />}
         </div>
       </main>
       <Newsletter />

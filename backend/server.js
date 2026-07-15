@@ -20,12 +20,12 @@ const contactRoutes = require('./src/routes/contactRoutes');
 const newsletterRoutes = require('./src/routes/newsletterRoutes');
 const festivalRoutes = require('./src/routes/festivalRoutes');
 const adminFestivalRoutes = require('./src/routes/adminFestivalRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
 
 // Initialize express app
 const app = express();
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB using startServer cycle below
 
 // Global Middlewares
 app.use(helmet());
@@ -92,6 +92,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/festivals', festivalRoutes);
 app.use('/api/admin/festivals', adminFestivalRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Base route check
 app.get('/', (req, res) => {
@@ -101,8 +102,80 @@ app.get('/', (req, res) => {
 // Global Error Handler
 app.use(errorHandler);
 
+function validateEnvironment() {
+  const otpMode = process.env.OTP_MODE || "test";
+  const razorpayMode = process.env.RAZORPAY_MODE || "test";
+
+  const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || "";
+  if (!mongoUri.startsWith("mongodb://") && !mongoUri.startsWith("mongodb+srv://")) {
+    console.error("FATAL ERROR: MONGO_URI must start with mongodb:// or mongodb+srv://");
+    process.exit(1);
+  }
+
+  const jwtSecret = process.env.JWT_SECRET || "";
+  if (!jwtSecret || jwtSecret.toLowerCase().includes("placeholder") || jwtSecret.toLowerCase().includes("your_")) {
+    console.error("FATAL ERROR: JWT_SECRET must not be blank or placeholder text.");
+    process.exit(1);
+  }
+
+  if (otpMode === "live") {
+    const fast2SmsKey = process.env.FAST2SMS_API_KEY || "";
+    if (!fast2SmsKey || fast2SmsKey.toLowerCase().includes("placeholder") || fast2SmsKey.toLowerCase().includes("your_")) {
+      console.error("FATAL ERROR: FAST2SMS_API_KEY must not be blank or placeholder text when OTP_MODE is set to live.");
+      process.exit(1);
+    }
+    const fast2SmsOtpId = process.env.FAST2SMS_OTP_ID || "";
+    if (!fast2SmsOtpId || fast2SmsOtpId.toLowerCase().includes("placeholder") || fast2SmsOtpId.toLowerCase().includes("your_")) {
+      console.error("FATAL ERROR: FAST2SMS_OTP_ID must not be blank or placeholder text when OTP_MODE is set to live.");
+      process.exit(1);
+    }
+  }
+
+  if (razorpayMode === "live") {
+    const razorpayKeyId = process.env.RAZORPAY_KEY_ID || "";
+    if (!razorpayKeyId || razorpayKeyId.toLowerCase().includes("placeholder") || razorpayKeyId.toLowerCase().includes("your_")) {
+      console.error("FATAL ERROR: RAZORPAY_KEY_ID must not be blank or placeholder text when RAZORPAY_MODE is set to live.");
+      process.exit(1);
+    }
+    if (!razorpayKeyId.startsWith("rzp_live_")) {
+      console.error("FATAL ERROR: RAZORPAY_KEY_ID must start with rzp_live_ when RAZORPAY_MODE is set to live.");
+      process.exit(1);
+    }
+    if (razorpayKeyId.startsWith("rzp_test_")) {
+      console.error("FATAL ERROR: Test keys (starting with rzp_test_) are rejected when RAZORPAY_MODE is set to live.");
+      process.exit(1);
+    }
+    const razorpaySecret = process.env.RAZORPAY_KEY_SECRET || "";
+    if (!razorpaySecret || razorpaySecret.toLowerCase().includes("placeholder") || razorpaySecret.toLowerCase().includes("your_")) {
+      console.error("FATAL ERROR: RAZORPAY_KEY_SECRET must not be blank or placeholder text when RAZORPAY_MODE is set to live.");
+      process.exit(1);
+    }
+  }
+
+  console.log("-----------------------------------------");
+  console.log(`MongoDB URI: ${mongoUri ? "configured" : "not configured"}`);
+  console.log(`JWT secret: ${jwtSecret ? "configured" : "not configured"}`);
+  console.log(`OTP mode: ${otpMode}`);
+  console.log(`Fast2SMS key: ${process.env.FAST2SMS_API_KEY ? "configured" : "not configured"}`);
+  console.log(`Fast2SMS OTP ID: ${process.env.FAST2SMS_OTP_ID ? "configured" : "not configured"}`);
+  console.log(`Razorpay mode: ${razorpayMode}`);
+  console.log(`Razorpay live key: ${process.env.RAZORPAY_KEY_ID ? "configured" : "not configured"}`);
+  console.log("-----------------------------------------");
+}
+
 // Listen to Port
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running in development mode on port ${PORT}`);
+
+async function startServer() {
+  validateEnvironment();
+  await connectDB();
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+startServer().catch((err) => {
+  console.error("Server startup failed:", err.message);
+  process.exit(1);
 });

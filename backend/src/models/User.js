@@ -5,8 +5,9 @@ const userSchema = new mongoose.Schema({
   passwordHash: { type: String },        // null until user sets password
   fullName: String,
   email: String,
-  role: { type: String, enum: ['donor', 'volunteer', 'coordinator', 'admin'], default: 'donor' },
+  role: { type: String, enum: ['donor', 'volunteer', 'coordinator', 'admin', 'superadmin', 'viewer'], default: 'donor' },
   zone: { type: String },
+  status: { type: String, enum: ['active', 'suspended', 'archived'], default: 'active' },
   isVerified: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });

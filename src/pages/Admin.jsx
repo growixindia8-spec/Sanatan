@@ -1,38 +1,56 @@
-import React, { useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import { Lock, Phone, Eye, EyeOff, ShieldAlert, Loader } from 'lucide-react';
-import { usePortalAuth } from '../context/PortalAuthContext';
+import React, { useState, useEffect } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { Lock, Phone, Eye, EyeOff, ShieldAlert, Loader } from "lucide-react";
+import { useAdminAuth } from "../context/AdminAuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Admin() {
-  const [mobile, setMobile] = useState('');
-  const [password, setPassword] = useState('');
+  const { loginAdmin, errorMsg, setErrorMsg, isAdminAuthenticated } = useAdminAuth();
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState("");
   
-  const { login } = usePortalAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAdminAuthenticated) {
+      navigate("/admin/dashboard");
+    }
+  }, [isAdminAuthenticated, navigate]);
+
+  // Read URL query parameter for expired sessions
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("expired") === "true") {
+      setErrorMsg("Your admin session has expired. Please log in again.");
+    } else {
+      setErrorMsg("");
+    }
+  }, [location.search, setErrorMsg]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccessMsg('');
+    setErrorMsg("");
+    setSuccessMsg("");
     setLoading(true);
 
     try {
-      const success = await login(mobile, password);
-      if (success) {
-        setSuccessMsg('Successfully logged in! Redirecting to workspace...');
-        // Redirect to portal workspace after brief delay
+      const res = await loginAdmin(mobile, password);
+      if (res.success) {
+        setSuccessMsg("Logged in successfully! Accessing workspace...");
         setTimeout(() => {
-          window.location.href = import.meta.env.VITE_PORTAL_URL || 'http://localhost:5174';
-        }, 1500);
-      } else {
-        setError('अमान्य लॉगिन क्रेडेंशियल। / Invalid admin credentials.');
+          // If a redirect path exists, use it; otherwise go to dashboard
+          const from = location.state?.from || "/admin/dashboard";
+          navigate(from, { replace: true });
+        }, 1200);
       }
     } catch (err) {
-      setError(err.message || 'Login failed. Please try again.');
+      setErrorMsg(err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -44,14 +62,12 @@ export default function Admin() {
       
       <main className="flex-grow flex items-center justify-center py-16 px-4">
         <div className="max-w-md w-full bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden relative">
-          {/* Saffron/Orange Accent bar */}
           <div className="h-1.5 w-full bg-gradient-to-r from-orange-500 to-red-600"></div>
           
           <div className="p-8">
-            {/* Header / Logo Icon */}
             <div className="flex flex-col items-center mb-8 text-center">
-              <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-orange-500/10">
-                <Lock size={32} className="text-[#FF6600]" />
+              <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-orange-500/10 text-[#FF6600]">
+                <Lock size={32} />
               </div>
               <span className="text-[10px] font-extrabold text-[#FF6600] tracking-widest uppercase mb-1">
                 Security Gateway
@@ -64,15 +80,13 @@ export default function Admin() {
               </p>
             </div>
 
-            {/* Error Message */}
-            {error && (
+            {errorMsg && (
               <div className="mb-6 p-4 bg-red-50 text-red-700 text-xs font-semibold rounded-xl border border-red-100 flex items-center gap-2">
                 <ShieldAlert size={16} className="shrink-0 text-red-500" />
-                <span>{error}</span>
+                <span>{errorMsg}</span>
               </div>
             )}
 
-            {/* Success Message */}
             {successMsg && (
               <div className="mb-6 p-4 bg-green-50 text-green-700 text-xs font-semibold rounded-xl border border-green-100 flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-ping"></div>
@@ -80,7 +94,6 @@ export default function Admin() {
               </div>
             )}
 
-            {/* Login Form */}
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Registered Mobile</label>
@@ -91,8 +104,8 @@ export default function Admin() {
                   <input
                     type="tel"
                     value={mobile}
-                    onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                    className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-250 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent text-charcoal font-medium text-sm transition-all"
+                    onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                    className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent text-charcoal font-medium text-sm transition-all"
                     placeholder="10-digit mobile number"
                     maxLength={10}
                     required
@@ -107,10 +120,10 @@ export default function Admin() {
                     <Lock size={16} />
                   </div>
                   <input
-                    type={showPass ? 'text' : 'password'}
+                    type={showPass ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-11 pr-10 py-3.5 bg-white border border-gray-250 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent text-charcoal font-medium text-sm transition-all"
+                    className="w-full pl-11 pr-10 py-3.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent text-charcoal font-medium text-sm transition-all"
                     placeholder="••••••••"
                     required
                   />

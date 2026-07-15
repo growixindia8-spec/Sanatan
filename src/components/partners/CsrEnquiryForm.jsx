@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { api } from '../../lib/apiClient';
 
 export default function CsrEnquiryForm() {
   const [formData, setFormData] = useState({
@@ -32,14 +33,6 @@ export default function CsrEnquiryForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const getApiUrl = () => {
-    let url = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-    if (url.endsWith('/')) {
-      url = url.slice(0, -1);
-    }
-    return url;
-  };
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -64,7 +57,6 @@ export default function CsrEnquiryForm() {
     setLoading(true);
     setError(null);
 
-    // Validate focusAreas when interested is 'Yes'
     if (formData.interestedInCollaboration === 'Yes' && formData.focusAreas.length === 0) {
       setError('Please select at least one CSR focus area.');
       setLoading(false);
@@ -72,25 +64,14 @@ export default function CsrEnquiryForm() {
     }
 
     try {
-      const res = await fetch(`${getApiUrl()}/api/csr/enquiry`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          designation: formData.designation || 'Representative'
-        })
+      await api.submitCsrEnquiry({
+        ...formData,
+        designation: formData.designation || 'Representative'
       });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setSubmitted(true);
-      } else {
-        setError(data.message || 'Error submitting inquiry. Please try again.');
-      }
+      setSubmitted(true);
     } catch (err) {
       console.error(err);
-      setError('Network error. Please check your connection and try again.');
+      setError(err.message || 'Error submitting inquiry. Please try again.');
     } finally {
       setLoading(false);
     }

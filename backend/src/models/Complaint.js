@@ -9,7 +9,13 @@ const complaintSchema = new mongoose.Schema({
   description: { type: String, required: true },
   dateOfIncident: { type: Date },
   evidenceUrl: { type: String }, // Cloudinary URL
-  status: { type: String, enum: ['pending', 'investigating', 'resolved', 'closed'], default: 'pending' },
+  status: { type: String, enum: ['new', 'pending', 'investigating', 'in-review', 'assigned', 'resolved', 'closed', 'rejected'], default: 'new' },
+  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  notes: [{
+    text: { type: String, required: true },
+    author: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+  }],
   createdAt: { type: Date, default: Date.now }
 });
 

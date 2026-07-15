@@ -8,11 +8,14 @@ if (dns.setDefaultResultOrder) {
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/sanatan');
+    mongoose.set('bufferCommands', false);
+    const conn = await mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/sanatan', {
+      bufferCommands: false
+    });
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`Database connection error: ${error.message}`);
-    console.warn('Backend server is running in offline database fallback mode.');
+    throw error;
   }
 };
 
